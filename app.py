@@ -695,8 +695,6 @@ def deploy_stream():
                         yield emit_log({'type': 'error', 'message': f'Pre-command failed with exit code {process.returncode}'})
                         deployment_state.finish('failed')
                         return
-                    else:
-                        yield emit_log({'type': 'success', 'message': '✓ Pre-command completed'})
                         
                 except Exception as e:
                     yield emit_log({'type': 'error', 'message': f'Pre-command error: {str(e)}'})
@@ -830,8 +828,6 @@ def deploy_stream():
                             
                             if process.returncode != 0:
                                 yield emit_log({'type': 'warning', 'message': f'Post-command exited with code {process.returncode} (non-fatal)'})
-                            else:
-                                yield emit_log({'type': 'success', 'message': f'Post-command completed'})
                                 
                         except Exception as e:
                             yield emit_log({'type': 'warning', 'message': f'Post-command error: {str(e)}'})

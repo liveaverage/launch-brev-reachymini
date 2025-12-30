@@ -684,10 +684,33 @@ def deploy_stream():
                         bufsize=1
                     )
                     
+                    # Detect if this is a docker pull command for smart progress handling
+                    is_docker_pull = 'pull' in normalized_cmd.lower()
+                    
                     # Stream output line by line
                     for line in iter(process.stdout.readline, ''):
                         if line:
-                            yield emit_log({'type': 'output', 'message': line.rstrip()})
+                            stripped = line.rstrip()
+                            if is_docker_pull and stripped:
+                                # Parse docker pull progress lines
+                                # Format: "layer_id status [progress] time"
+                                # Examples: "b57e432a1d89 Downloading 15 s"
+                                #           "7ee5d5f1dfec Pull complete"
+                                parts = stripped.split(None, 1)
+                                if len(parts) >= 1 and len(parts[0]) == 12:
+                                    # Looks like a layer ID (12 hex chars)
+                                    layer_id = parts[0]
+                                    status = parts[1] if len(parts) > 1 else ''
+                                    yield emit_log({
+                                        'type': 'progress',
+                                        'layer_id': layer_id,
+                                        'message': status
+                                    })
+                                else:
+                                    # Regular output (not a progress line)
+                                    yield emit_log({'type': 'output', 'message': stripped})
+                            else:
+                                yield emit_log({'type': 'output', 'message': stripped})
                     
                     process.wait()
                     

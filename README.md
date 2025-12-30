@@ -1,317 +1,218 @@
-# Reachy Mini Sim Deployment Launcher (Interlude)
+<h1 align="center">🚀 Reachy Mini Sim Launcher</h1>
 
-A web-based deployment launcher for the Reachy Mini humanoid robot simulation with Pipecat AI integration. Provides a clean, secure interface for deploying and managing the simulation container with GPU acceleration.
+<p align="center">
+  <strong>One-click web interface for deploying Reachy Mini simulation with Pipecat AI</strong>
+</p>
 
-Built on the **Interlude** framework - a generic deployment launcher for containerized applications.
+<p align="center">
+  <img src="https://img.shields.io/badge/Docker-Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker Compose"/>
+  <img src="https://img.shields.io/badge/NVIDIA-GPU%20Required-76B900?style=for-the-badge&logo=nvidia&logoColor=white" alt="NVIDIA GPU"/>
+  <img src="https://img.shields.io/badge/Flask-Backend-000000?style=for-the-badge&logo=flask&logoColor=white" alt="Flask"/>
+  <img src="https://img.shields.io/badge/Pipecat-AI-00d4aa?style=for-the-badge" alt="Pipecat AI"/>
+</p>
 
-## Features
+<p align="center">
+  <em>Built on the <strong>Interlude</strong> framework—a generic deployment launcher for containerized applications</em>
+</p>
 
-- **Single-page web interface** styled after the Brev/NVIDIA console design
-- **Dynamic input fields** for NVIDIA and ElevenLabs API keys
-- **Docker Compose deployment** with GPU passthrough and host networking
-- **Real-time streaming logs** during deployment
-- **Deployment state management** with uninstall capability
-- **Lightweight Flask backend** with minimal dependencies
+---
 
-## Quick Start
+## ✨ Features
+
+<table>
+<tr>
+<td width="50%">
+
+### 🖥️ Clean Web Interface
+Brev/NVIDIA-inspired console design with real-time streaming logs and deployment state management.
+
+### 🔑 Dynamic Input Fields
+Flexible configuration system—add API keys or secrets without touching code.
+
+### 🐳 Docker Compose Deployment
+GPU passthrough, host networking, and automatic container lifecycle management.
+
+</td>
+<td width="50%">
+
+### 📦 Secret Persistence
+`.env` file management like Kubernetes secrets—API keys persist across restarts.
+
+### 🔗 Smart Service Links
+Auto-generated URLs with runtime substitution for `${HOST_IP}` and `${BASE_DOMAIN}`.
+
+### ⚡ Lightweight Backend
+Minimal Flask app with zero framework bloat.
+
+</td>
+</tr>
+</table>
+
+---
+
+## 🚀 Quick Start
 
 ### One-Line Bootstrap (Recommended)
-
-Install and run everything with a single command:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/liveaverage/launch-brev-reachymini/main/bootstrap.sh | bash
 ```
 
-Or with custom install directory:
+**What it does:**
+- ✅ Clones the repository
+- ✅ Pulls container image (`ghcr.io/liveaverage/launch-brev-reachymini:latest`)
+- ✅ Starts the launcher on port 8080
+- ✅ Exposes web UI at `http://localhost:8080`
+
+<details>
+<summary><strong>📂 Custom Install Directory</strong></summary>
 
 ```bash
-INSTALL_DIR=/opt/r2sim-launcher curl -fsSL https://raw.githubusercontent.com/liveaverage/launch-brev-reachymini/main/bootstrap.sh | bash
+INSTALL_DIR=/opt/reachy-launcher curl -fsSL https://raw.githubusercontent.com/liveaverage/launch-brev-reachymini/main/bootstrap.sh | bash
 ```
 
-**What it does:**
-- Clones the repository
-- Pulls the latest container image (`ghcr.io/liveaverage/launch-brev-reachymini:latest`)
-- Configures and starts the launcher
-- Exposes the web UI on port 8080
+</details>
 
-### Prerequisites
+---
 
-- Docker installed and running with GPU support
-- NVIDIA GPU with drivers installed (525.60.13 or newer)
-- nvidia-container-toolkit configured
-- **Docker Compose V2** (built into modern Docker) or legacy `docker-compose` binary
-- Python 3.8+ (for native mode) or Docker (for containerized mode)
-- API Keys:
-  - NVIDIA API Key from https://build.nvidia.com/
-  - ElevenLabs API Key from https://elevenlabs.io/
+## 📋 Prerequisites
 
-**Note on Docker Compose:** The launcher automatically detects and uses either `docker compose` (V2) or `docker-compose` (V1 standalone). Both are supported.
+| Requirement | Details |
+|:------------|:--------|
+| **Docker** | Docker Compose V2 (or legacy `docker-compose`) |
+| **GPU** | NVIDIA GPU with drivers 525.60.13+ |
+| **Toolkit** | nvidia-container-toolkit configured |
+| **API Keys** | NVIDIA ([build.nvidia.com](https://build.nvidia.com/)) + ElevenLabs ([elevenlabs.io](https://elevenlabs.io/)) |
 
-### Verify GPU Access
+> **Note:** The launcher auto-detects `docker compose` (V2) or `docker-compose` (V1). Both are supported.
+
+<details>
+<summary><strong>🔍 Verify GPU Access</strong></summary>
 
 ```bash
 docker run --rm --gpus all nvidia/cuda:12.0.0-base-ubuntu22.04 nvidia-smi
 ```
 
-If this fails, install nvidia-container-toolkit:
-https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html
+If this fails, install [nvidia-container-toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html).
 
-## Deployment Options
+</details>
 
-### Option 1: Native Mode (Recommended)
+---
 
-Run directly on your host without containerization. Best for local development.
+## 🎯 Usage
 
-```bash
-./run-native.sh
-```
+<table>
+<tr>
+<th>Step</th>
+<th>Action</th>
+</tr>
+<tr>
+<td>1️⃣</td>
+<td>Open <code>http://localhost:8080</code> in your browser</td>
+</tr>
+<tr>
+<td>2️⃣</td>
+<td>Enter <strong>NVIDIA API Key</strong> (<code>nvapi-...</code>) and <strong>ElevenLabs API Key</strong> (<code>sk_...</code>)</td>
+</tr>
+<tr>
+<td>3️⃣</td>
+<td>Click <strong>🤙 Let it rip</strong> to deploy</td>
+</tr>
+<tr>
+<td>4️⃣</td>
+<td>Monitor real-time logs as the container pulls and starts</td>
+</tr>
+<tr>
+<td>5️⃣</td>
+<td>Access services via generated links</td>
+</tr>
+</table>
 
-**Pros:**
-- No Docker socket mounting required
-- Direct access to host GPU
-- Simpler debugging
-- Faster startup
+### 🌐 Service Links
 
-**Cons:**
-- Requires Python 3 and Flask installed locally
+After deployment completes, clickable service links appear:
 
-### Option 2: Containerized Launcher
+| Service | Port | Description |
+|:--------|:-----|:------------|
+| **🖥️ noVNC Simulation** | 6080 | Interactive robot simulation via noVNC |
+| **🤖 Pipecat Dashboard** | 7860 | Pipecat AI control interface |
 
-Build and run the launcher itself in a container:
+Links are automatically configured:
+- Via public IP: `https://<HOST_IP>:6080/vnc.html`
+- Via domain tunnel: Uses extracted `BASE_DOMAIN` for service URLs
 
-```bash
-# Build the launcher image
-docker build -t interlude-r2sim .
+### 🗑️ Uninstalling
 
-# Run with Docker socket access
-docker run -d \
-  -p 8080:8080 \
-  -v /var/run/docker.sock:/var/run/docker.sock \
-  -v $(pwd)/config.json:/app/config.json:ro \
-  -v $(pwd)/docker-compose.yaml:/app/docker-compose.yaml:ro \
-  --name interlude \
-  interlude-r2sim
-```
+Click **Uninstall** to:
+- Stop and remove the container
+- Clean up deployment state and `.env` file
+- Keep cached Docker image for faster redeployment
 
-### Access the Application
+---
 
-Open your browser and navigate to:
-```
-http://localhost:8080
-```
+## ⚙️ Configuration
 
-Or if using a custom launcher path (e.g., behind a reverse proxy):
-```
-http://your-domain.com/interlude
-```
-
-## Configuration
-
-### Dynamic Input Fields
-
-The launcher uses a flexible input field system defined in `config.json`:
-
-```json
-{
-  "docker-compose": {
-    "input_fields": [
-      {
-        "id": "nvidiaApiKey",
-        "label": "NVIDIA API Key",
-        "type": "password",
-        "placeholder": "nvapi-...",
-        "env_var": "NVIDIA_API_KEY",
-        "required": true
-      },
-      {
-        "id": "elevenlabsApiKey",
-        "label": "ElevenLabs API Key",
-        "type": "password",
-        "placeholder": "sk_...",
-        "env_var": "ELEVENLABS_API_KEY",
-        "required": true
-      }
-    ]
-  }
-}
-```
-
-### Secret Persistence with `.env` Files
+### 🔐 Secret Persistence with `.env` Files
 
 **Like Kubernetes secrets, but for Docker Compose.**
 
-API keys and secrets entered via the launcher are automatically persisted to a `.env` file in the working directory. This ensures:
+API keys entered via the launcher are automatically persisted to a `.env` file:
 
-✅ **Secrets persist across launcher restarts**  
-✅ **Manual `docker-compose` commands work without re-entering keys**  
+✅ **Secrets survive launcher restarts**  
+✅ **Manual `docker-compose` commands work seamlessly**  
 ✅ **Container restarts preserve configuration**  
 ✅ **Standard Docker Compose practice**
-
-**How it works:**
-1. User enters API keys via web interface
-2. Backend writes `.env` file with secure permissions (600 - owner only)
-3. Docker Compose automatically reads `.env` for variable substitution
-4. Keys persist until explicit uninstall
 
 **Security:**
 - File permissions: `600` (owner read/write only)
 - Excluded from git via `.gitignore`
 - Automatically cleaned up on uninstall
-- Only whitelisted environment variables are written
 
-**Manual access:**
+<details>
+<summary><strong>🔧 Manual Operations</strong></summary>
+
 ```bash
-# View your persisted secrets (be careful!)
+# View persisted secrets (be careful!)
 cat .env
 
-# Manual docker-compose operations work seamlessly
-docker-compose restart
-docker-compose down && docker-compose up -d
+# Manual docker-compose operations
+docker compose restart
+docker compose down && docker compose up -d
 
-# Clean up (also done automatically via uninstall button)
+# Clean up
 rm .env
 ```
 
-### Service Links with Runtime URL Substitution
+</details>
 
-After successful deployment, the launcher displays clickable links to available services. URLs support runtime variable substitution:
+### 🔗 Service Links with Runtime Substitution
+
+Service URLs support dynamic variables resolved at deployment time:
 
 ```json
 {
-  "docker-compose": {
-    "services": [
-      {
-        "name": "Open noVNC Simulation",
-        "url": "https://${HOST_IP}:6080/vnc.html",
-        "description": "Interactive robot simulation via noVNC"
-      },
-      {
-        "name": "Open Pipecat Dashboard",
-        "url": "https://${HOST_IP}:7860",
-        "description": "Pipecat AI control interface"
-      }
-    ]
-  }
+  "services": [
+    {
+      "name": "Open noVNC Simulation",
+      "url": "https://${HOST_IP}:6080/vnc.html",
+      "description": "Interactive robot simulation via noVNC"
+    }
+  ]
 }
 ```
 
 **Available Variables:**
-- `${HOST_IP}` - Public IP address derived from `curl icanhazip.com`
-- `${BASE_DOMAIN}` - Domain suffix extracted from the Host header
+- `${HOST_IP}` - Public IP from `curl icanhazip.com`
+- `${BASE_DOMAIN}` - Domain suffix extracted from Host header
   - Example: `studio-lccpkmz8f.brevlab.com` → `-lccpkmz8f.brevlab.com`
   - Usage: `https://dash${BASE_DOMAIN}` → `https://dash-lccpkmz8f.brevlab.com`
 
-**How it works:**
-1. During deployment, the backend derives `HOST_IP` and `BASE_DOMAIN`
-2. Template variables in service URLs are substituted with actual values
-3. Resolved URLs are saved to persistent state
-4. Frontend displays service links after deployment and in history mode
+### 🎨 Customization
 
-### Input Field Schema
+<details>
+<summary><strong>➕ Adding New Input Fields</strong></summary>
 
-Each field supports:
-- `id`: Unique identifier for the field
-- `label`: Display label in the UI
-- `type`: Input type (text, password, etc.)
-- `placeholder`: Placeholder text
-- `env_var`: Environment variable name to set in the container
-- `required`: Whether the field is required (boolean)
-
-This flexible system allows you to add/remove/modify input fields without changing the HTML or JavaScript.
-
-### Deployment Commands
-
-Commands are defined in `config.json`:
-
-```json
-{
-  "docker-compose": {
-    "pre_commands": [
-      "docker-compose -f docker-compose.yaml pull"
-    ],
-    "command": "docker-compose -f docker-compose.yaml up -d",
-    "uninstall_commands": [
-      "docker-compose -f docker-compose.yaml down",
-      "docker-compose -f docker-compose.yaml rm -f"
-    ]
-  }
-}
-```
-
-## Architecture
-
-### Frontend (SPA)
-- Pure JavaScript (no framework dependencies)
-- Dynamic form generation from config
-- Server-Sent Events (SSE) for real-time log streaming
-- Deployment state management with history mode
-
-### Backend (Flask)
-- Lightweight Python Flask application
-- Dynamic input field handling
-- Streaming command execution with real-time output
-- Persistent deployment state tracking
-- Environment variable mapping for Docker Compose
-
-### Container Configuration
-- Image: `ghcr.io/liveaverage/reachy-mini-pipecat:latest`
-- Network: Host mode (required for Isaac Sim)
-- GPU: All NVIDIA GPUs with full capabilities
-- Memory: 2GB shared memory for rendering
-
-## File Structure
-
-```
-.
-├── app.py                      # Flask backend with dynamic field support
-├── index.html                  # Frontend SPA with dynamic form rendering
-├── config.json                 # Deployment configuration with input fields
-├── docker-compose.yaml         # Reachy simulation container definition
-├── help-content.json           # Help documentation content
-├── requirements.txt            # Python dependencies
-├── assets/                     # Static assets (logos, etc.)
-├── Dockerfile                  # Launcher containerization
-├── run-native.sh               # Native execution script
-└── README.md                   # This file
-```
-
-## Usage
-
-1. **Open the launcher** at `http://localhost:8080`
-2. **Enter API keys**:
-   - NVIDIA API Key (nvapi-...)
-   - ElevenLabs API Key (sk_...)
-3. **Click "🤙 Let it rip"** to deploy
-4. **Monitor real-time logs** as the container pulls and starts
-5. **Access services** via the links displayed after deployment completes:
-   - noVNC Simulation at port 6080
-   - Pipecat Dashboard at port 7860
-
-### Service Links
-
-After successful deployment, clickable service links appear in:
-- **Success banner** at the end of streaming logs
-- **Persistent service links section** below the deployment status
-- **History mode** when you revisit after deployment
-
-Links are automatically configured based on your access method:
-- Via public IP: `https://<host-ip>:6080/vnc.html`
-- Via domain with tunnel: Uses extracted base domain for service URLs
-
-### Uninstalling
-
-Click the **🗑️ Uninstall** button to:
-- Stop the running container
-- Remove container resources
-- Clear deployment state
-- Keep the cached Docker image for faster redeployment
-
-## Customization
-
-### Adding New Input Fields
-
-Edit `config.json` to add new fields:
+Edit `config.json`—no code changes needed:
 
 ```json
 {
@@ -328,76 +229,136 @@ Edit `config.json` to add new fields:
 }
 ```
 
-The frontend and backend automatically adapt to new fields - no code changes needed!
+</details>
 
-### Changing the Logo
+<details>
+<summary><strong>🖼️ Changing the Logo</strong></summary>
 
-Replace `assets/nvidia-logo.svg` or modify the SVG in `index.html`.
+Replace `assets/nvidia-logo.svg` or modify the inline SVG in `index.html`.
 
-### Styling
+</details>
 
-All styles are in the `<style>` section of `index.html`:
+<details>
+<summary><strong>🎨 Styling</strong></summary>
+
+All styles live in `<style>` section of `index.html`:
 - Background: `#181818`
 - Primary Green: `#76b900`
 - Input Background: `rgba(255, 255, 255, 0.05)`
 
-### Help Content
+</details>
 
-Edit `help-content.json` to customize the help modal content. Supports:
-- Markdown-style formatting (`**bold**`, `code`)
-- Multiple sections with icons
-- Links (auto-detected)
+---
 
-## Security Considerations
+## 🏗️ Architecture
 
-- **API keys persisted to `.env` file** with 600 permissions (owner only)
-- **`.env` excluded from git** via `.gitignore` - never committed
-- **Automatic cleanup** on uninstall removes `.env` file
-- Input fields use `type="password"` for visual masking in browser
-- Container runs with user-specified privileges (no forced root)
-- Host network mode required for Isaac Sim but limits network isolation
-- Keys stored as plaintext in `.env` - ensure proper host security
-- Only whitelisted environment variables written to `.env`
+### Frontend (SPA)
+- Pure JavaScript (no framework dependencies)
+- Dynamic form generation from `config.json`
+- Server-Sent Events (SSE) for real-time log streaming
+- Deployment state management with history mode
 
-## Troubleshooting
+### Backend (Flask)
+- Lightweight Python Flask application
+- Dynamic input field handling
+- Streaming command execution with real-time output
+- Persistent deployment state tracking (`.state` file)
+- Environment variable mapping for Docker Compose
 
-### Container Fails to Start
+### Container Configuration
 
-**Symptom**: Container exits immediately after start  
-**Solution**: 
-1. Check GPU drivers: `nvidia-smi`
-2. Verify nvidia-container-toolkit: `docker run --rm --gpus all nvidia/cuda:12.0.0-base-ubuntu22.04 nvidia-smi`
-3. Check logs: `docker logs reachy_pipecat`
+| Setting | Value | Purpose |
+|:--------|:------|:--------|
+| **Image** | `ghcr.io/liveaverage/reachy-mini-pipecat:latest` | Pre-built simulation image |
+| **Network** | `host` | Required for Isaac Sim |
+| **GPU** | All NVIDIA GPUs | Full capabilities passthrough |
+| **Memory** | 2GB shared | Rendering buffer |
 
-### API Key Errors
+### File Structure
 
-**Symptom**: Authentication failures in logs  
-**Solution**: 
+```
+.
+├── app.py                      # Flask backend with dynamic field support
+├── index.html                  # Frontend SPA with dynamic form rendering
+├── config.json                 # Deployment configuration with input fields
+├── docker-compose.yaml         # Reachy simulation container definition
+├── help-content.json           # Help documentation content
+├── requirements.txt            # Python dependencies
+├── assets/                     # Static assets (logos, etc.)
+├── Dockerfile                  # Launcher containerization
+├── bootstrap.sh                # One-line installer
+└── README.md                   # This file
+```
+
+---
+
+## 🔥 Troubleshooting
+
+<details>
+<summary><strong>❌ Container Fails to Start</strong></summary>
+
+**Symptom:** Container exits immediately after start
+
+**Solution:**
+```bash
+# Check GPU drivers
+nvidia-smi
+
+# Verify nvidia-container-toolkit
+docker run --rm --gpus all nvidia/cuda:12.0.0-base-ubuntu22.04 nvidia-smi
+
+# Check logs
+docker logs reachy_pipecat
+```
+
+</details>
+
+<details>
+<summary><strong>❌ API Key Errors</strong></summary>
+
+**Symptom:** Authentication failures in logs
+
+**Solution:**
 1. Verify NVIDIA API key at https://build.nvidia.com/
 2. Verify ElevenLabs API key at https://elevenlabs.io/
 3. Ensure keys have not expired
 4. Check for copy/paste errors (extra spaces, truncation)
 
-### Slow Startup
+</details>
 
-**Symptom**: Deployment takes 10+ minutes  
-**Solution**: 
+<details>
+<summary><strong>❌ Slow Startup / Long Pull Times</strong></summary>
+
+**Symptom:** Deployment takes 10+ minutes
+
+**Explanation:**
 - First pull downloads large image (~10GB)
 - Subsequent deployments use cached image
 - Check network speed and Docker Hub connectivity
 
-### Port Conflicts
+</details>
 
-**Symptom**: Cannot bind to port  
-**Solution**: 
-- Host network mode uses all ports the container needs
-- Check for conflicting services: `sudo netstat -tulpn`
-- Stop conflicting services or modify container configuration
+<details>
+<summary><strong>❌ Port Conflicts</strong></summary>
 
-### Permission Denied on Docker Socket
+**Symptom:** Cannot bind to port
 
-**Symptom**: Cannot connect to Docker daemon  
-**Solution**:
+**Solution:**
+```bash
+# Check for conflicting services
+sudo netstat -tulpn | grep -E '6080|7860'
+
+# Stop conflicting services or modify docker-compose.yaml
+```
+
+</details>
+
+<details>
+<summary><strong>❌ Permission Denied on Docker Socket</strong></summary>
+
+**Symptom:** Cannot connect to Docker daemon
+
+**Solution:**
 ```bash
 # Add user to docker group
 sudo usermod -aG docker $USER
@@ -407,7 +368,10 @@ newgrp docker
 sudo ./run-native.sh
 ```
 
-## Development
+</details>
+
+<details>
+<summary><strong>🐛 Development Mode</strong></summary>
 
 Run locally without Docker:
 
@@ -419,41 +383,46 @@ pip install -r requirements.txt
 python app.py
 ```
 
-The application will be available at `http://localhost:8080`
+Access at `http://localhost:8080`
 
-## Environment Variables
+</details>
+
+---
+
+## 🌍 Environment Variables
 
 Configure via environment variables:
 
+| Variable | Default | Description |
+|:---------|:--------|:------------|
+| `DEPLOY_TYPE` | `docker-compose` | Active deployment type from config |
+| `DEPLOY_HEADING` | `Deploy Reachy Mini Sim` | Custom heading |
+| `PROJECT_NAME` | `Reachy Mini Sim` | Browser tab title |
+| `LAUNCHER_PATH` | `/interlude` | Base path for reverse proxy |
+| `STATE_FILE` | `/app/data/deployment.state` | Persistent state location |
+
+---
+
+## 📚 API Endpoints
+
+<details>
+<summary><strong>View Available Endpoints</strong></summary>
+
 ```bash
-export DEPLOY_TYPE="docker-compose"        # Active deployment type from config
-export DEPLOY_HEADING="Deploy Reachy Sim"  # Custom heading
-export PROJECT_NAME="Reachy Mini Sim"         # Browser tab title
-export LAUNCHER_PATH="/r2sim"              # Base path for reverse proxy
-export STATE_FILE="/app/data/deployment.state"  # Persistent state location
-```
-
-## Testing
-
-### Verify Configuration
-
-Check config endpoint:
-```bash
+# Check configuration
 curl http://localhost:8080/config
-```
 
-### Check Deployment State
-
-```bash
+# Check deployment state
 curl http://localhost:8080/state
-```
 
-### View Help Content
-
-```bash
+# View help content
 curl http://localhost:8080/help
 ```
 
-## License
+</details>
 
-MIT
+---
+
+<p align="center">
+  <sub>Built on the <strong>Interlude</strong> framework • MIT License</sub>
+</p>

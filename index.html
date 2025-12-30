@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Brev Console</title>
-    <link rel="icon" href="/favicon.ico">
+    <title>Reachy Mini Sim Launcher</title>
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
     <style>
         * {
             margin: 0;
@@ -357,6 +357,13 @@
             font-size: 12px;
             font-weight: 400;
             margin-top: 4px;
+        }
+
+        .stream-line.progress {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 12px;
+            font-family: 'Courier New', monospace;
+            line-height: 1.4;
         }
 
         .dry-run-section {
@@ -1195,6 +1202,21 @@
                 case 'info':
                     prefix = 'ℹ ';
                     break;
+                case 'progress':
+                    // Docker pull progress - update in place by layer_id
+                    const layerId = data.layer_id;
+                    const existingLine = streamOutput.querySelector(`[data-layer-id="${layerId}"]`);
+                    
+                    if (existingLine) {
+                        // Update existing line
+                        existingLine.textContent = `  ${layerId} ${data.message}`;
+                    } else {
+                        // Create new line
+                        line.setAttribute('data-layer-id', layerId);
+                        line.textContent = `  ${layerId} ${data.message}`;
+                        streamOutput.appendChild(line);
+                    }
+                    return;
                 case 'pods':
                     // Clear previous pod lines before showing new status
                     const oldPods = streamOutput.querySelectorAll('.stream-line.pod');

@@ -18,18 +18,18 @@ A web-based deployment launcher for the Reachy 2 humanoid robot simulation with 
 Install and run everything with a single command:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/liveaverage/brev-launch-r2sim/main/bootstrap.sh | bash
+curl -fsSL https://raw.githubusercontent.com/liveaverage/launch-brev-reachymini/main/bootstrap.sh | bash
 ```
 
 Or with custom install directory:
 
 ```bash
-INSTALL_DIR=/opt/r2sim-launcher curl -fsSL https://raw.githubusercontent.com/liveaverage/brev-launch-r2sim/main/bootstrap.sh | bash
+INSTALL_DIR=/opt/r2sim-launcher curl -fsSL https://raw.githubusercontent.com/liveaverage/launch-brev-reachymini/main/bootstrap.sh | bash
 ```
 
 **What it does:**
 - Clones the repository
-- Pulls the latest container image
+- Pulls the latest container image (`ghcr.io/liveaverage/launch-brev-reachymini:latest`)
 - Configures and starts the launcher
 - Exposes the web UI on port 8080
 

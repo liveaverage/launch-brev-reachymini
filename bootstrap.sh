@@ -1,11 +1,11 @@
 #!/bin/bash
 # Bootstrap script for Reachy 2 Sim Launcher
-# Usage: curl -fsSL https://raw.githubusercontent.com/liveaverage/brev-launch-r2sim/main/bootstrap.sh | bash
+# Usage: curl -fsSL https://raw.githubusercontent.com/liveaverage/launch-brev-reachymini/main/bootstrap.sh | bash
 set -e
 
-REPO_URL="https://github.com/liveaverage/brev-launch-r2sim.git"
-IMAGE="ghcr.io/liveaverage/brev-launch-r2sim:latest"
-INSTALL_DIR="${INSTALL_DIR:-$HOME/brev-launch-r2sim}"
+REPO_URL="https://github.com/liveaverage/launch-brev-reachymini.git"
+IMAGE="ghcr.io/liveaverage/launch-brev-reachymini:latest"
+INSTALL_DIR="${INSTALL_DIR:-$HOME/launch-brev-reachymini}"
 CONTAINER_NAME="r2sim-launcher"
 
 echo "════════════════════════════════════════════════════════════"
@@ -44,7 +44,7 @@ else
     else
         echo "   (git not found, using tarball)"
         mkdir -p "$INSTALL_DIR"
-        curl -fsSL https://github.com/liveaverage/brev-launch-r2sim/archive/refs/heads/main.tar.gz | \
+        curl -fsSL https://github.com/liveaverage/launch-brev-reachymini/archive/refs/heads/main.tar.gz | \
             tar -xz --strip-components=1 -C "$INSTALL_DIR"
     fi
     cd "$INSTALL_DIR"
@@ -78,6 +78,6 @@ echo "  📁 Config: $INSTALL_DIR/config.json"
 echo "  📋 Logs:   docker logs -f $CONTAINER_NAME"
 echo "  🛑 Stop:   docker stop $CONTAINER_NAME"
 echo ""
-echo "  📚 Docs: https://github.com/liveaverage/brev-launch-r2sim"
+echo "  📚 Docs: https://github.com/liveaverage/launch-brev-reachymini"
 echo "════════════════════════════════════════════════════════════"
 

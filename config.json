@@ -1,11 +1,11 @@
 {
   "_meta": {
-    "project_name": "Reachy 2 Sim Launcher",
+    "project_name": "Reachy Mini Sim Launcher",
     "launcher_path": "/interlude"
   },
   "docker-compose": {
-    "description": "Reachy 2 Simulation with Pipecat AI",
-    "heading": "Deploy Reachy 2 Sim",
+    "description": "Reachy Mini Simulation with Pipecat AI",
+    "heading": "Deploy Reachy Mini Sim",
     "versions": [],
     "default_version": "",
     "working_dir": ".",
@@ -40,7 +40,7 @@
       }
     ],
     "pre_commands": [
-      "docker compose -f docker-compose.yaml pull --progress plain"
+      "docker compose -f docker-compose.yaml pull"
     ],
     "command": "docker compose -f docker-compose.yaml up -d",
     "post_commands": [],

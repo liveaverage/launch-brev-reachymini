@@ -1,5 +1,5 @@
 #!/bin/bash
-# Bootstrap script for Reachy 2 Sim Launcher
+# Bootstrap script for Reachy Mini Sim Launcher
 # Usage: curl -fsSL https://raw.githubusercontent.com/liveaverage/launch-brev-reachymini/main/bootstrap.sh | bash
 set -e
 
@@ -9,7 +9,7 @@ INSTALL_DIR="${INSTALL_DIR:-$HOME/launch-brev-reachymini}"
 CONTAINER_NAME="interlude"
 
 echo "════════════════════════════════════════════════════════════"
-echo "  Interlude - Reachy 2 Sim Launcher"
+echo "  Interlude - Reachy Mini Sim Launcher"
 echo "════════════════════════════════════════════════════════════"
 echo ""
 

@@ -1,10 +1,10 @@
 {
-  "title": "Reachy 2 Sim Deployment Guide",
+  "title": "Reachy Mini Sim Deployment Guide",
   "sections": [
     {
-      "title": "About Reachy 2 Sim",
+      "title": "About Reachy Mini Sim",
       "icon": "🤖",
-      "content": "This launcher deploys the **Reachy 2 humanoid robot simulation** with Pipecat AI integration. The simulation provides a realistic environment for testing and developing Reachy robot applications with multimodal AI capabilities.\n\nThe container includes Isaac Sim rendering, Reachy robot model, and Pipecat AI framework for natural language interaction."
+      "content": "This launcher deploys the **Reachy Mini humanoid robot simulation** with Pipecat AI integration. The simulation provides a realistic environment for testing and developing Reachy robot applications with multimodal AI capabilities.\n\nThe container includes Isaac Sim rendering, Reachy robot model, and Pipecat AI framework for natural language interaction."
     },
     {
       "title": "Required API Keys",

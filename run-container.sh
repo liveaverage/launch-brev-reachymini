@@ -1,5 +1,5 @@
 #!/bin/bash
-# Launch Reachy 2 Sim Launcher container
+# Launch Reachy Mini Sim Launcher container
 #
 # Usage:
 #   ./run-container.sh                    # Use local image

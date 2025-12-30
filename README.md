@@ -1,6 +1,6 @@
-# Reachy 2 Sim Deployment Launcher (Interlude)
+# Reachy Mini Sim Deployment Launcher (Interlude)
 
-A web-based deployment launcher for the Reachy 2 humanoid robot simulation with Pipecat AI integration. Provides a clean, secure interface for deploying and managing the simulation container with GPU acceleration.
+A web-based deployment launcher for the Reachy Mini humanoid robot simulation with Pipecat AI integration. Provides a clean, secure interface for deploying and managing the simulation container with GPU acceleration.
 
 Built on the **Interlude** framework - a generic deployment launcher for containerized applications.
 
@@ -428,7 +428,7 @@ Configure via environment variables:
 ```bash
 export DEPLOY_TYPE="docker-compose"        # Active deployment type from config
 export DEPLOY_HEADING="Deploy Reachy Sim"  # Custom heading
-export PROJECT_NAME="Reachy 2 Sim"         # Browser tab title
+export PROJECT_NAME="Reachy Mini Sim"         # Browser tab title
 export LAUNCHER_PATH="/r2sim"              # Base path for reverse proxy
 export STATE_FILE="/app/data/deployment.state"  # Persistent state location
 ```

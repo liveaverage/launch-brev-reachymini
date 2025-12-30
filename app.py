@@ -290,20 +290,13 @@ def cleanup_env_file(working_dir='.'):
         logger.error(f"✗ Failed to remove .env file: {e}")
         return False
 
-def normalize_docker_compose_command(command):
+def get_docker_compose_command():
     """
-    Normalize docker-compose commands to work with both legacy and modern syntax.
+    Detect which docker compose command is available.
     
-    Detects available command:
-    - Modern: 'docker compose' (Docker Compose V2, built into Docker CLI)
-    - Legacy: 'docker-compose' (standalone binary)
-    
-    Returns: Command string with correct syntax for the current environment
-    
-    Note: Only replaces the command portion (docker-compose or docker compose),
-    preserves filenames like docker-compose.yaml
+    Returns: 'docker compose' (V2) or 'docker-compose' (V1) or None
     """
-    # Check if modern 'docker compose' is available
+    # Try modern docker compose first
     try:
         result = subprocess.run(
             ["docker", "compose", "version"],
@@ -311,16 +304,12 @@ def normalize_docker_compose_command(command):
             timeout=5
         )
         if result.returncode == 0:
-            # Modern syntax available
-            # Only replace at word boundaries to avoid replacing filenames
             logger.info("Detected: docker compose (V2)")
-            # Replace 'docker-compose' command but not 'docker-compose.yaml' filename
-            import re
-            return re.sub(r'\bdocker-compose\b', 'docker compose', command)
+            return "docker compose"
     except Exception:
         pass
     
-    # Check if legacy 'docker-compose' is available
+    # Try legacy docker-compose
     try:
         result = subprocess.run(
             ["docker-compose", "version"],
@@ -328,16 +317,31 @@ def normalize_docker_compose_command(command):
             timeout=5
         )
         if result.returncode == 0:
-            # Legacy syntax available
             logger.info("Detected: docker-compose (V1)")
-            # Replace 'docker compose' command but not filenames
-            import re
-            return re.sub(r'\bdocker\s+compose\b', 'docker-compose', command)
+            return "docker-compose"
     except Exception:
         pass
     
-    # Default: return as-is and let it fail with helpful error
     logger.warning("Neither 'docker compose' nor 'docker-compose' found")
+    return None
+
+def normalize_docker_compose_command(command):
+    """
+    Replace the docker-compose command in the string with the available one.
+    Simple approach: detect once, replace the command part only.
+    """
+    compose_cmd = get_docker_compose_command()
+    
+    if not compose_cmd:
+        return command  # Return as-is if neither is available
+    
+    # Simple replacement: replace "docker-compose" OR "docker compose" at the START of the command
+    # with whatever is actually available
+    if command.strip().startswith('docker-compose'):
+        return command.replace('docker-compose', compose_cmd, 1)  # Replace only FIRST occurrence
+    elif command.strip().startswith('docker compose'):
+        return command.replace('docker compose', compose_cmd, 1)  # Replace only FIRST occurrence
+    
     return command
 
 def execute_command(command, working_dir, env, timeout=300, stream_queue=None):

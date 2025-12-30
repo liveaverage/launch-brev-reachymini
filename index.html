@@ -615,7 +615,7 @@
             <!-- History mode banner -->
             <div class="history-banner" id="historyBanner">
                 <h3>✓ Deployment Active</h3>
-                <p id="historyVersion">Version: --</p>
+                <p id="historyVersion" style="display: none;">Version: --</p>
                 <p class="timestamp" id="historyTimestamp">Deployed: --</p>
             </div>
             
@@ -848,6 +848,9 @@
             historyBanner.classList.add('show');
             if (config.deployed_version) {
                 historyVersion.textContent = `Version: ${config.deployed_version}`;
+                historyVersion.style.display = 'block';
+            } else {
+                historyVersion.style.display = 'none';
             }
             if (config.deployed_at) {
                 const date = new Date(config.deployed_at);

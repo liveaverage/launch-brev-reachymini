@@ -796,7 +796,7 @@ def deploy_stream():
                 yield emit_log({'type': 'complete'})
                 deployment_state.finish('timeout')
             elif result_holder['returncode'] == 0:
-                yield emit_log({'type': 'success', 'message': 'Helm install command completed successfully!'})
+                # Main command completed successfully - continue to post-commands
 
                 # Execute post-commands (e.g., start reverse proxy)
                 if post_commands:

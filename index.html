@@ -1216,6 +1216,8 @@
                         line.textContent = `  ${layerId} ${data.message}`;
                         streamOutput.appendChild(line);
                     }
+                    // Trigger auto-scroll after progress update
+                    streamOutput.scrollTop = streamOutput.scrollHeight;
                     return;
                 case 'pods':
                     // Clear previous pod lines before showing new status

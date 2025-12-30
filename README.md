@@ -11,9 +11,6 @@
   <img src="https://img.shields.io/badge/Pipecat-AI-00d4aa?style=for-the-badge" alt="Pipecat AI"/>
 </p>
 
-<p align="center">
-  <em>Built on the <strong>Interlude</strong> framework—a generic deployment launcher for containerized applications</em>
-</p>
 
 ---
 

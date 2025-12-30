@@ -1,16 +1,15 @@
 #!/bin/bash
-# Bootstrap script for Interlude (NeMo Microservices Launcher)
-# Usage: curl -fsSL https://raw.githubusercontent.com/liveaverage/launch-brev-nmp/main/bootstrap.sh | bash
+# Bootstrap script for Reachy 2 Sim Launcher
+# Usage: curl -fsSL https://raw.githubusercontent.com/liveaverage/brev-launch-r2sim/main/bootstrap.sh | bash
 set -e
 
-REPO_URL="https://github.com/liveaverage/launch-brev-nmp.git"
-IMAGE="ghcr.io/liveaverage/launch-brev-nmp:latest"
-INSTALL_DIR="${INSTALL_DIR:-$HOME/launch-brev-nmp}"
-CONTAINER_NAME="interlude"
-OLD_CONTAINER_NAME="brev-launch-nmp"  # For cleanup of legacy containers
+REPO_URL="https://github.com/liveaverage/brev-launch-r2sim.git"
+IMAGE="ghcr.io/liveaverage/brev-launch-r2sim:latest"
+INSTALL_DIR="${INSTALL_DIR:-$HOME/brev-launch-r2sim}"
+CONTAINER_NAME="r2sim-launcher"
 
 echo "════════════════════════════════════════════════════════════"
-echo "  Interlude - NeMo Microservices Launcher"
+echo "  Reachy 2 Sim Launcher"
 echo "════════════════════════════════════════════════════════════"
 echo ""
 
@@ -21,14 +20,16 @@ if ! command -v docker &> /dev/null; then
     exit 1
 fi
 
-if ! command -v kubectl &> /dev/null; then
-    echo "⚠️  kubectl not found - you'll need it on the host to verify deployments"
+# Check for GPU support
+if ! docker run --rm --gpus all nvidia/cuda:12.0.0-base-ubuntu22.04 nvidia-smi &> /dev/null; then
+    echo "⚠️  GPU support not detected or nvidia-container-toolkit not installed"
+    echo "   This deployment requires NVIDIA GPU and nvidia-container-toolkit"
+    echo "   Install: https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html"
 fi
 
-# Stop any existing containers (both old and new names)
+# Stop any existing containers
 echo "🧹 Cleaning up existing containers..."
 docker rm -f "$CONTAINER_NAME" 2>/dev/null && echo "   Removed: $CONTAINER_NAME" || true
-docker rm -f "$OLD_CONTAINER_NAME" 2>/dev/null && echo "   Removed: $OLD_CONTAINER_NAME (legacy)" || true
 
 # Clone or update repo
 if [ -d "$INSTALL_DIR" ]; then
@@ -43,7 +44,7 @@ else
     else
         echo "   (git not found, using tarball)"
         mkdir -p "$INSTALL_DIR"
-        curl -fsSL https://github.com/liveaverage/launch-brev-nmp/archive/refs/heads/main.tar.gz | \
+        curl -fsSL https://github.com/liveaverage/brev-launch-r2sim/archive/refs/heads/main.tar.gz | \
             tar -xz --strip-components=1 -C "$INSTALL_DIR"
     fi
     cd "$INSTALL_DIR"
@@ -65,16 +66,18 @@ echo "════════════════════════�
 echo "  ✓ Launcher is running!"
 echo ""
 echo "  ┌───────────────────────────────────────────────────────┐"
-echo "  │  First launch (pre-deployment):                       │"
-echo "  │    http://localhost:8888   (deployment UI)            │"
+echo "  │  Web Interface:                                       │"
+echo "  │    http://localhost:8080                              │"
 echo "  │                                                       │"
-echo "  │  After deployment:                                    │"
-echo "  │    http://localhost:8888            (NeMo Studio)     │"
-echo "  │    http://localhost:8888/interlude  (deployment UI)   │"
+echo "  │  After deployment, access services:                  │"
+echo "  │    noVNC Simulation: http://<host-ip>:6080/vnc.html  │"
+echo "  │    Pipecat Dashboard: http://<host-ip>:7860          │"
 echo "  └───────────────────────────────────────────────────────┘"
 echo ""
-echo "  📁 Config: $INSTALL_DIR/config-helm.json"
+echo "  📁 Config: $INSTALL_DIR/config.json"
 echo "  📋 Logs:   docker logs -f $CONTAINER_NAME"
 echo "  🛑 Stop:   docker stop $CONTAINER_NAME"
+echo ""
+echo "  📚 Docs: https://github.com/liveaverage/brev-launch-r2sim"
 echo "════════════════════════════════════════════════════════════"
 

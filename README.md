@@ -112,6 +112,42 @@ The launcher uses a flexible input field system defined in `config.json`:
 }
 ```
 
+### Secret Persistence with `.env` Files
+
+**Like Kubernetes secrets, but for Docker Compose.**
+
+API keys and secrets entered via the launcher are automatically persisted to a `.env` file in the working directory. This ensures:
+
+✅ **Secrets persist across launcher restarts**  
+✅ **Manual `docker-compose` commands work without re-entering keys**  
+✅ **Container restarts preserve configuration**  
+✅ **Standard Docker Compose practice**
+
+**How it works:**
+1. User enters API keys via web interface
+2. Backend writes `.env` file with secure permissions (600 - owner only)
+3. Docker Compose automatically reads `.env` for variable substitution
+4. Keys persist until explicit uninstall
+
+**Security:**
+- File permissions: `600` (owner read/write only)
+- Excluded from git via `.gitignore`
+- Automatically cleaned up on uninstall
+- Only whitelisted environment variables are written
+
+**Manual access:**
+```bash
+# View your persisted secrets (be careful!)
+cat .env
+
+# Manual docker-compose operations work seamlessly
+docker-compose restart
+docker-compose down && docker-compose up -d
+
+# Clean up (also done automatically via uninstall button)
+rm .env
+```
+
 ### Service Links with Runtime URL Substitution
 
 After successful deployment, the launcher displays clickable links to available services. URLs support runtime variable substitution:
@@ -289,11 +325,14 @@ Edit `help-content.json` to customize the help modal content. Supports:
 
 ## Security Considerations
 
-- API keys are passed as environment variables only
-- Keys are not stored on disk or in logs
-- Input fields use `type="password"` for visual masking
+- **API keys persisted to `.env` file** with 600 permissions (owner only)
+- **`.env` excluded from git** via `.gitignore` - never committed
+- **Automatic cleanup** on uninstall removes `.env` file
+- Input fields use `type="password"` for visual masking in browser
 - Container runs with user-specified privileges (no forced root)
-- Host network mode required for Isaac Sim but limits isolation
+- Host network mode required for Isaac Sim but limits network isolation
+- Keys stored as plaintext in `.env` - ensure proper host security
+- Only whitelisted environment variables written to `.env`
 
 ## Troubleshooting
 

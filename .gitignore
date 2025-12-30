@@ -6,3 +6,8 @@ docs/
 .interlude-data/
 __pycache__/
 *.pyc
+
+# Environment files with secrets
+.env
+.env.*
+!.env.example

@@ -4,13 +4,12 @@ FROM python:3.11-slim
 LABEL org.opencontainers.image.description="Interlude - Generic deployment launcher (Reachy 2 Sim configuration)"
 LABEL org.opencontainers.image.licenses="MIT"
 
-# Install Docker CLI, Docker Compose, Helm, kubectl, nginx, and openssl
+# Install Docker CLI, Docker Compose, Helm, kubectl, and nginx
 RUN apt-get update && apt-get install -y \
     curl \
     ca-certificates \
     gnupg \
     lsb-release \
-    openssl \
     procps \
     debian-keyring \
     debian-archive-keyring \
@@ -56,9 +55,8 @@ ENV CONFIG_FILE=/app/config.json
 
 # Expose ports:
 # 8888 - nginx HTTP (single entry point)
-# 8443 - nginx HTTPS (single entry point)
 # Flask runs on internal :8080, not exposed
-EXPOSE 8888 8443
+EXPOSE 8888
 
 # Create data directory for persistent state
 RUN mkdir -p /app/data

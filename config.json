@@ -40,7 +40,7 @@
       }
     ],
     "pre_commands": [
-      "docker compose -f docker-compose.yaml pull"
+      "docker compose -f docker-compose.yaml pull --progress plain"
     ],
     "command": "docker compose -f docker-compose.yaml up -d",
     "post_commands": [],

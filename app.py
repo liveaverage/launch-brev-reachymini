@@ -663,7 +663,7 @@ def deploy_stream():
             else:
                 yield emit_log({'type': 'warning', 'message': '⚠ Failed to write .env file - secrets may not persist'})
 
-            # Execute pre-commands (synchronously)
+            # Execute pre-commands (synchronously with real-time streaming)
             for idx, pre_cmd in enumerate(pre_commands, 1):
                 yield emit_log({'type': 'section', 'message': f'Pre-command {idx}/{len(pre_commands)}'})
                 
@@ -671,16 +671,35 @@ def deploy_stream():
                 normalized_cmd = normalize_docker_compose_command(pre_cmd)
                 yield emit_log({'type': 'command', 'message': normalized_cmd})
 
-                result = execute_command(normalized_cmd, working_dir, env, timeout=600, stream_queue=log_queue)
-
-                # Send queued output
-                while not log_queue.empty():
-                    msg_type, msg = log_queue.get()
-                    yield emit_log({'type': msg_type, 'message': msg})
-
-                if result.returncode != 0:
-                    yield emit_log({'type': 'error', 'message': f'Pre-command failed with exit code {result.returncode}'})
-                    yield emit_log({'type': 'error', 'message': result.stdout if hasattr(result, 'stdout') else 'Unknown error'})
+                # Execute with real-time streaming
+                try:
+                    process = subprocess.Popen(
+                        normalized_cmd,
+                        shell=True,
+                        cwd=working_dir,
+                        env=env,
+                        stdout=subprocess.PIPE,
+                        stderr=subprocess.STDOUT,
+                        text=True,
+                        bufsize=1
+                    )
+                    
+                    # Stream output line by line
+                    for line in iter(process.stdout.readline, ''):
+                        if line:
+                            yield emit_log({'type': 'output', 'message': line.rstrip()})
+                    
+                    process.wait()
+                    
+                    if process.returncode != 0:
+                        yield emit_log({'type': 'error', 'message': f'Pre-command failed with exit code {process.returncode}'})
+                        deployment_state.finish('failed')
+                        return
+                    else:
+                        yield emit_log({'type': 'success', 'message': '✓ Pre-command completed'})
+                        
+                except Exception as e:
+                    yield emit_log({'type': 'error', 'message': f'Pre-command error: {str(e)}'})
                     deployment_state.finish('failed')
                     return
 
@@ -789,23 +808,37 @@ def deploy_stream():
                         normalized_post = normalize_docker_compose_command(post_cmd)
                         yield emit_log({'type': 'command', 'message': normalized_post})
                         
-                        result = execute_command(normalized_post, working_dir, env, timeout=120, stream_queue=log_queue)
-                        
-                        # Send queued output
-                        while not log_queue.empty():
-                            msg_type, msg = log_queue.get()
-                            yield emit_log({'type': msg_type, 'message': msg})
-                        
-                        if result.returncode != 0:
-                            yield emit_log({'type': 'warning', 'message': f'Post-command exited with code {result.returncode} (non-fatal)'})
-                        else:
-                            yield emit_log({'type': 'success', 'message': f'Post-command completed'})
+                        # Execute with real-time streaming
+                        try:
+                            process = subprocess.Popen(
+                                normalized_post,
+                                shell=True,
+                                cwd=working_dir,
+                                env=env,
+                                stdout=subprocess.PIPE,
+                                stderr=subprocess.STDOUT,
+                                text=True,
+                                bufsize=1
+                            )
+                            
+                            # Stream output line by line
+                            for line in iter(process.stdout.readline, ''):
+                                if line:
+                                    yield emit_log({'type': 'output', 'message': line.rstrip()})
+                            
+                            process.wait()
+                            
+                            if process.returncode != 0:
+                                yield emit_log({'type': 'warning', 'message': f'Post-command exited with code {process.returncode} (non-fatal)'})
+                            else:
+                                yield emit_log({'type': 'success', 'message': f'Post-command completed'})
+                                
+                        except Exception as e:
+                            yield emit_log({'type': 'warning', 'message': f'Post-command error: {str(e)}'})
+                            # Don't fail deployment for post-command errors
 
-                # Success message with links
+                # Success - deployment complete
                 yield emit_log({'type': 'section', 'message': '🎉 Deployment Complete!'})
-                yield emit_log({'type': 'success', 'message': 'NeMo Microservices are now running.'})
-                yield emit_log({'type': 'link', 'message': 'Open NeMo Studio', 'url': '/studio'})
-                yield emit_log({'type': 'link', 'message': 'View Deployment Status', 'url': '/interlude'})
 
                 # Derive runtime variables for service URLs
                 host_ip = get_host_ip()

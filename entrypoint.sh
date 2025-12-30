@@ -1,5 +1,5 @@
 #!/bin/bash
-# Entrypoint: nginx (reverse proxy on :80/:443) + Flask (SPA on :8080 internal)
+# Entrypoint: nginx (reverse proxy on :8888) + Flask (SPA on :8080 internal)
 # 
 # Routing modes:
 #   PRE-DEPLOYMENT:  / → Flask SPA (enter API keys, deploy)
@@ -9,22 +9,10 @@ set -e
 LAUNCHER_PATH="${LAUNCHER_PATH:-/interlude}"
 STATE_FILE="${STATE_FILE:-/app/data/deployment.state}"
 HTTP_PORT="${HTTP_PORT:-8888}"
-HTTPS_PORT="${HTTPS_PORT:-8443}"
 
 # Stop any existing nginx (from package install)
 pkill nginx 2>/dev/null || true
 sleep 0.5
-
-# Generate self-signed cert for :443
-if [ ! -f /app/certs/server.crt ]; then
-    mkdir -p /app/certs
-    openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
-        -keyout /app/certs/server.key \
-        -out /app/certs/server.crt \
-        -subj "/CN=interlude/O=brev-launch" \
-        2>/dev/null
-    echo "✓ Generated self-signed certificate"
-fi
 
 # Create data directory for state
 mkdir -p /app/data
@@ -64,12 +52,8 @@ http {
     
     server {
         listen $HTTP_PORT;
-        listen $HTTPS_PORT ssl;
         server_name _;
         
-        ssl_certificate /app/certs/server.crt;
-        ssl_certificate_key /app/certs/server.key;
-        ssl_protocols TLSv1.2 TLSv1.3;
         
         # Flask SPA always accessible at $LAUNCHER_PATH (rewrite to remove prefix)
         location $LAUNCHER_PATH {
@@ -159,7 +143,7 @@ for i in {1..30}; do
 done
 
 # Start nginx
-echo "🌐 Starting nginx on :$HTTP_PORT/:$HTTPS_PORT..."
+echo "🌐 Starting nginx on :$HTTP_PORT..."
 nginx -c /app/nginx.conf -g 'daemon off;' &
 NGINX_PID=$!
 

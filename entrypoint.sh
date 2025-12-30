@@ -2,8 +2,8 @@
 # Entrypoint: nginx (reverse proxy on :80/:443) + Flask (SPA on :8080 internal)
 # 
 # Routing modes:
-#   PRE-DEPLOYMENT:  / → Flask SPA (enter API key, deploy)
-#   POST-DEPLOYMENT: / → NeMo, /interlude → Flask SPA (history/status)
+#   PRE-DEPLOYMENT:  / → Flask SPA (enter API keys, deploy)
+#   POST-DEPLOYMENT: / → Flask SPA (view services, status)
 set -e
 
 LAUNCHER_PATH="${LAUNCHER_PATH:-/interlude}"
@@ -166,11 +166,11 @@ NGINX_PID=$!
 # Banner
 echo ""
 echo "╔════════════════════════════════════════════════════════════════╗"
-echo "║  Interlude - NeMo Deployment Launcher                          ║"
+echo "║  Reachy 2 Sim Launcher                                         ║"
 echo "╠════════════════════════════════════════════════════════════════╣"
 if is_deployed; then
 echo "║  Mode: POST-DEPLOYMENT                                         ║"
-echo "║  NeMo:       http://localhost:$HTTP_PORT/                               ║"
+echo "║  Services:   See launcher for links                            ║"
 echo "║  Launcher:   http://localhost:$HTTP_PORT$LAUNCHER_PATH                        ║"
 else
 echo "║  Mode: PRE-DEPLOYMENT (first launch)                           ║"

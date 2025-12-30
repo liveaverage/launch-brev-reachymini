@@ -1,5 +1,5 @@
 #!/bin/bash
-# Launch Interlude container (NeMo deployment launcher + reverse proxy)
+# Launch Reachy 2 Sim Launcher container
 #
 # Usage:
 #   ./run-container.sh                    # Use local image
@@ -7,15 +7,15 @@
 #
 # Environment variables:
 #   SHOW_DRY_RUN=true       # Show dry run option (default: hidden)
-#   DEPLOY_TYPE=helm-nemo   # Override deployment type from config
-#   LAUNCHER_PATH=/interlude  # Subpath for deployment UI after deployment
+#   DEPLOY_TYPE=docker-compose   # Override deployment type from config
+#   LAUNCHER_PATH=/r2sim    # Subpath for deployment UI
 
 set -e
 
-IMAGE="${1:-ghcr.io/liveaverage/launch-brev-nmp:latest}"
-CONTAINER_NAME="interlude"
+IMAGE="${1:-ghcr.io/liveaverage/launch-brev-reachymini:latest}"
+CONTAINER_NAME="r2sim-launcher"
 CONFIG_DIR="$(cd "$(dirname "$0")" && pwd)"
-DATA_DIR="$CONFIG_DIR/.interlude-data"
+DATA_DIR="$CONFIG_DIR/.r2sim-data"
 
 # Create data directory for persistent state
 mkdir -p "$DATA_DIR"
@@ -25,8 +25,8 @@ docker rm -f "$CONTAINER_NAME" 2>/dev/null || true
 
 echo "Starting $CONTAINER_NAME..."
 echo "  Image: $IMAGE"
-echo "  Config: $CONFIG_DIR/config-helm.json"
-echo "  Kubeconfig: $HOME/.kube"
+echo "  Config: $CONFIG_DIR/config.json"
+echo "  Docker Socket: /var/run/docker.sock"
 echo "  State: $DATA_DIR"
 
 # Build env var flags
@@ -36,15 +36,15 @@ ENV_FLAGS=""
 [ -n "$DEPLOY_HEADING" ] && ENV_FLAGS="$ENV_FLAGS -e DEPLOY_HEADING=$DEPLOY_HEADING"
 [ -n "$LAUNCHER_PATH" ] && ENV_FLAGS="$ENV_FLAGS -e LAUNCHER_PATH=$LAUNCHER_PATH"
 
-# Use host network for K8s API access and ingress routing
+# Use host network for GPU access and direct service exposure
 docker run -d \
   --name "$CONTAINER_NAME" \
   --network host \
   $ENV_FLAGS \
-  -v "$HOME/.kube:/root/.kube:ro" \
-  -v "$CONFIG_DIR/config-helm.json:/app/config.json:ro" \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  -v "$CONFIG_DIR/config.json:/app/config.json:ro" \
+  -v "$CONFIG_DIR/docker-compose.yaml:/app/docker-compose.yaml:ro" \
   -v "$CONFIG_DIR/help-content.json:/app/help-content.json:ro" \
-  -v "$CONFIG_DIR/nemo-proxy:/app/nemo-proxy:ro" \
   -v "$DATA_DIR:/app/data" \
   "$IMAGE"
 
@@ -52,12 +52,11 @@ echo ""
 echo "✓ Container started"
 echo ""
 echo "  ┌───────────────────────────────────────────────────────┐"
-echo "  │  First launch (pre-deployment):                       │"
-echo "  │    http://localhost:8888   (deployment UI)            │"
+echo "  │  Launcher:   http://localhost:8888                    │"
 echo "  │                                                       │"
-echo "  │  After deployment:                                    │"
-echo "  │    http://localhost:8888            (NeMo Studio)     │"
-echo "  │    http://localhost:8888/interlude  (deployment UI)   │"
+echo "  │  After deployment, services will be available at:    │"
+echo "  │    noVNC:     http://<host-ip>:6080/vnc.html         │"
+echo "  │    Pipecat:   http://<host-ip>:7860                  │"
 echo "  └───────────────────────────────────────────────────────┘"
 echo ""
 echo "  Logs: docker logs -f $CONTAINER_NAME"

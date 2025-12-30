@@ -1,7 +1,7 @@
 FROM python:3.11-slim
 
 # OCI labels for GHCR
-LABEL org.opencontainers.image.description="Interlude - NeMo Microservices deployment launcher with integrated reverse proxy"
+LABEL org.opencontainers.image.description="Interlude - Reachy 2 Sim Launcher - Deploy Reachy humanoid robot simulation with Pipecat AI"
 LABEL org.opencontainers.image.licenses="MIT"
 
 # Install Docker CLI, Docker Compose, Helm, kubectl, nginx, and openssl
@@ -45,15 +45,17 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY app.py .
 COPY index.html .
 COPY config.json .
-COPY config-helm.json .
+COPY docker-compose.yaml .
 COPY help-content.json .
 COPY assets ./assets
-COPY nemo-proxy ./nemo-proxy
 COPY entrypoint.sh .
-RUN chmod +x entrypoint.sh nemo-proxy/*.sh 2>/dev/null || true
+RUN chmod +x entrypoint.sh 2>/dev/null || true
+
+# Set default config file to use Reachy config
+ENV CONFIG_FILE=/app/config.json
 
 # Expose ports:
-# 8888 - nginx HTTP (single entry point, avoids conflict with k8s ingress on :80)
+# 8888 - nginx HTTP (single entry point)
 # 8443 - nginx HTTPS (single entry point)
 # Flask runs on internal :8080, not exposed
 EXPOSE 8888 8443

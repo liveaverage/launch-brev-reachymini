@@ -1,0 +1,45 @@
+{
+  "title": "Reachy 2 Sim Deployment Guide",
+  "sections": [
+    {
+      "title": "About Reachy 2 Sim",
+      "icon": "🤖",
+      "content": "This launcher deploys the **Reachy 2 humanoid robot simulation** with Pipecat AI integration. The simulation provides a realistic environment for testing and developing Reachy robot applications with multimodal AI capabilities.\n\nThe container includes Isaac Sim rendering, Reachy robot model, and Pipecat AI framework for natural language interaction."
+    },
+    {
+      "title": "Required API Keys",
+      "icon": "🔑",
+      "content": "**NVIDIA API Key**: Required for NVIDIA NIM (NVIDIA Inference Microservices) access. Get your key at https://build.nvidia.com/\n\n**ElevenLabs API Key**: Required for text-to-speech voice synthesis in the AI interaction system. Sign up at https://elevenlabs.io/ to obtain your API key.\n\nBoth keys are securely passed as environment variables to the container and are not stored."
+    },
+    {
+      "title": "Quick Start",
+      "icon": "🚀",
+      "content": "1. Enter your **NVIDIA API Key** (starts with `nvapi-`)\n2. Enter your **ElevenLabs API Key** (starts with `sk_`)\n3. Click **🤙 Let it rip** to deploy\n4. Wait for the container to pull and start (first run may take 5-10 minutes)\n5. Once complete, **service links will appear** for:\n   - noVNC Simulation (port 6080)\n   - Pipecat Dashboard (port 7860)\n\nThe deployment uses Docker Compose with GPU passthrough and host networking for optimal performance."
+    },
+    {
+      "title": "Technical Details",
+      "icon": "⚙️",
+      "content": "**Image**: `ghcr.io/liveaverage/reachy-mini-pipecat:latest`\n**Network Mode**: Host network (required for Isaac Sim)\n**GPU**: All available NVIDIA GPUs with full capabilities\n**Shared Memory**: 2GB (required for rendering)\n**Scene**: Minimal environment (`REACHY_SCENE=minimal`)\n**Resolution**: 1024x768\n\n**Exposed Services**:\n- noVNC at port 6080 (path: `/vnc.html`)\n- Pipecat Dashboard at port 7860\n\nThe container runs with `--restart unless-stopped` for automatic recovery. Service links are automatically configured based on your access method (public IP or domain)."
+    },
+    {
+      "title": "Uninstalling",
+      "icon": "🗑️",
+      "content": "Click the **🗑️ Uninstall** button to stop and remove the deployment. This will:\n- Stop the running container\n- Remove the container and associated resources\n- Clean up deployment state\n\nThe Docker image will remain cached for faster redeployment."
+    },
+    {
+      "title": "Troubleshooting",
+      "icon": "🐛",
+      "content": "**Common Issues:**\n\n• **Container fails to start** - Verify GPU drivers are installed and accessible\n• **API key errors** - Double-check both API keys are valid and have not expired\n• **Port conflicts** - Ensure no other services are using required ports (host network mode)\n• **Slow startup** - First pull can take 5-10 minutes depending on network speed\n\n**Check container logs**: `docker logs reachy_pipecat`\n**Check container status**: `docker ps -a`\n**Restart deployment**: Use the Uninstall button, then redeploy"
+    },
+    {
+      "title": "GPU Requirements",
+      "icon": "🎮",
+      "content": "**Minimum Requirements:**\n• NVIDIA GPU with 8GB+ VRAM\n• NVIDIA Driver 525.60.13 or newer\n• Docker with nvidia-container-toolkit installed\n• CUDA 11.8 or newer\n\n**Verify GPU access**:\n`docker run --rm --gpus all nvidia/cuda:12.0.0-base-ubuntu22.04 nvidia-smi`\n\nIf this fails, install nvidia-container-toolkit:\nhttps://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html"
+    },
+    {
+      "title": "Security Note",
+      "icon": "🔒",
+      "content": "Your API keys are:\n• Passed as environment variables to the container\n• NOT stored permanently by this application\n• Only accessible within the running container\n• Required for AI inference and TTS services\n\nNever share your API keys or commit them to version control."
+    }
+  ]
+}

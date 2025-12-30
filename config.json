@@ -1,0 +1,52 @@
+{
+  "_meta": {
+    "project_name": "Reachy 2 Sim Launcher",
+    "launcher_path": "/r2sim"
+  },
+  "docker-compose": {
+    "description": "Reachy 2 Simulation with Pipecat AI",
+    "heading": "Deploy Reachy 2 Sim",
+    "versions": [],
+    "default_version": "",
+    "working_dir": ".",
+    "input_fields": [
+      {
+        "id": "nvidiaApiKey",
+        "label": "NVIDIA API Key",
+        "type": "password",
+        "placeholder": "nvapi-...",
+        "env_var": "NVIDIA_API_KEY",
+        "required": true
+      },
+      {
+        "id": "elevenlabsApiKey",
+        "label": "ElevenLabs API Key",
+        "type": "password",
+        "placeholder": "sk_...",
+        "env_var": "ELEVENLABS_API_KEY",
+        "required": true
+      }
+    ],
+    "services": [
+      {
+        "name": "Open noVNC Simulation",
+        "url": "https://${HOST_IP}:6080/vnc.html",
+        "description": "Interactive robot simulation via noVNC"
+      },
+      {
+        "name": "Open Pipecat Dashboard",
+        "url": "https://${HOST_IP}:7860",
+        "description": "Pipecat AI control interface"
+      }
+    ],
+    "pre_commands": [
+      "docker-compose -f docker-compose.yaml pull"
+    ],
+    "command": "docker-compose -f docker-compose.yaml up -d",
+    "post_commands": [],
+    "uninstall_commands": [
+      "docker-compose -f docker-compose.yaml down",
+      "docker-compose -f docker-compose.yaml rm -f"
+    ]
+  }
+}

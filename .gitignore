@@ -1,0 +1,8 @@
+.claude
+nemo-microservices-*
+venv/
+.venv/
+docs/
+.interlude-data/
+__pycache__/
+*.pyc

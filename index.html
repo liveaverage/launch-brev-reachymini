@@ -1,0 +1,1444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Brev Console</title>
+    <link rel="icon" href="/favicon.ico">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+            background-color: #181818;
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .help-icon {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(118, 185, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 20px;
+            font-weight: 700;
+            color: #76b900;
+            transition: all 0.2s;
+            border: 2px solid #76b900;
+            z-index: 100;
+        }
+
+        .help-icon:hover {
+            background: #76b900;
+            color: #000;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            padding: 40px 20px;
+        }
+
+        .logo-container {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .logo {
+            width: 164px;
+            height: 30px;
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: crisp-edges;
+        }
+
+        .form-container {
+            width: 100%;
+        }
+
+        h1 {
+            font-size: 2.25rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 32px;
+            letter-spacing: -0.02em;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        input[type="password"],
+        input[type="text"],
+        select {
+            width: 100%;
+            padding: 11px 14px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            color: #ffffff;
+            font-size: 15px;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        input[type="password"]:focus,
+        input[type="text"]:focus,
+        select:focus {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: #76b900;
+        }
+
+        input[type="password"]::placeholder,
+        input[type="text"]::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='rgba(255,255,255,0.6)' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            padding-right: 40px;
+        }
+
+        select option {
+            background: #2a2a2a;
+            color: #ffffff;
+        }
+
+        .version-group {
+            display: none;
+        }
+
+        .version-group.show {
+            display: block;
+        }
+
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: #76b900;
+        }
+
+        .checkbox-label {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.8);
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .checkbox-description {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: -12px;
+            margin-bottom: 20px;
+            margin-left: 28px;
+        }
+
+        button[type="submit"] {
+            width: 100%;
+            padding: 12px;
+            background: #76b900;
+            color: #000000;
+            border: none;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button[type="submit"]:hover {
+            background: #659c00;
+        }
+
+        button[type="submit"]:disabled {
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.3);
+            cursor: not-allowed;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid rgba(0, 0, 0, 0.2);
+            border-top-color: #000;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .message {
+            margin-top: 16px;
+            padding: 12px 14px;
+            border-radius: 6px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .message.show {
+            display: block;
+        }
+
+        .message.success {
+            background: rgba(118, 185, 0, 0.15);
+            border: 1px solid rgba(118, 185, 0, 0.3);
+            color: #76b900;
+        }
+
+        .message.error {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #ef4444;
+        }
+
+        .dry-run-output,
+        .stream-output {
+            margin-top: 16px;
+            padding: 16px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', 'Courier New', monospace;
+            font-size: 13px;
+            max-height: 500px;
+            overflow-y: auto;
+            display: none;
+            line-height: 1.5;
+        }
+
+        .dry-run-output.show,
+        .stream-output.show {
+            display: block;
+        }
+
+        .stream-output {
+            background: #0d0d0d;
+            border: 1px solid #333;
+        }
+
+        .stream-line {
+            margin: 2px 0;
+            word-break: break-all;
+        }
+
+        .stream-line.command {
+            color: #76b900;
+            font-weight: 600;
+        }
+
+        .stream-line.section {
+            color: #fff;
+            font-weight: 700;
+            margin-top: 12px;
+            padding-top: 8px;
+            border-top: 1px solid #333;
+        }
+
+        .stream-line.error {
+            color: #ef4444;
+        }
+
+        .stream-line.success {
+            color: #76b900;
+            font-weight: 600;
+        }
+
+        .stream-line.info {
+            color: #60a5fa;
+        }
+
+        .stream-line.output {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .stream-line.log {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 12px;
+        }
+
+        .stream-line.pods {
+            color: #60a5fa;
+            font-weight: 600;
+            margin-top: 12px;
+        }
+
+        .stream-line.pod {
+            color: rgba(255, 255, 255, 0.9);
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+            font-size: 12px;
+            padding: 2px 8px;
+            background: rgba(255, 255, 255, 0.03);
+            margin: 1px 0;
+        }
+
+        .stream-line.pod:nth-child(even) {
+            background: rgba(255, 255, 255, 0.06);
+        }
+        
+        .stream-line.link {
+            margin: 8px 0;
+        }
+        
+        .stream-line.link a {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #76b900;
+            color: #000;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+        
+        .stream-line.link a:hover {
+            background: #8fd400;
+        }
+        
+        .stream-line.service {
+            margin: 8px 0;
+            padding: 12px 16px;
+            background: rgba(118, 185, 0, 0.1);
+            border: 1px solid rgba(118, 185, 0, 0.3);
+            border-radius: 6px;
+        }
+        
+        .stream-line.service a {
+            display: block;
+            color: #76b900;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .stream-line.service a:hover {
+            color: #8fd400;
+        }
+        
+        .stream-line.service .service-desc {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 12px;
+            font-weight: 400;
+            margin-top: 4px;
+        }
+
+        .dry-run-section {
+            margin-bottom: 16px;
+        }
+
+        .dry-run-title {
+            color: #76b900;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .dry-run-command {
+            padding: 8px;
+            background: rgba(0, 0, 0, 0.4);
+            border-left: 2px solid #76b900;
+            margin-bottom: 6px;
+            word-wrap: break-word;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #1e1e1e;
+            border-radius: 8px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-header h2 {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 24px;
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+        }
+
+        .modal-body {
+            padding: 24px;
+            overflow-y: auto;
+        }
+
+        .help-section {
+            margin-bottom: 24px;
+        }
+
+        .help-section h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #76b900;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .help-section p {
+            font-size: 14px;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.8);
+            white-space: pre-line;
+        }
+
+        .help-section a {
+            color: #76b900;
+            text-decoration: none;
+        }
+
+        .help-section a:hover {
+            text-decoration: underline;
+        }
+
+        .footer {
+            margin-top: 32px;
+            text-align: center;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.4);
+        }
+        
+        /* History mode styles */
+        .history-banner {
+            background: linear-gradient(135deg, rgba(118, 185, 0, 0.15), rgba(118, 185, 0, 0.05));
+            border: 1px solid rgba(118, 185, 0, 0.3);
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin-bottom: 24px;
+            display: none;
+        }
+        
+        .history-banner.show {
+            display: block;
+        }
+        
+        .history-banner h3 {
+            color: #76b900;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .history-banner p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 13px;
+            margin: 4px 0;
+        }
+        
+        .history-banner .timestamp {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 12px;
+        }
+        
+        .btn-disabled {
+            opacity: 0.5;
+            cursor: not-allowed !important;
+            background: rgba(118, 185, 0, 0.3) !important;
+        }
+        
+        .btn-secondary {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid rgba(239, 68, 68, 0.5);
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 12px;
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: #ef4444;
+        }
+        
+        .btn-secondary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .go-to-app-btn {
+            width: 100%;
+            padding: 12px 16px;
+            background: #76b900;
+            color: #000;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 12px;
+            text-decoration: none;
+            display: block;
+            text-align: center;
+        }
+        
+        .go-to-app-btn:hover {
+            background: #8fd400;
+        }
+        
+        /* Service links container */
+        .service-links {
+            margin-top: 16px;
+            padding: 16px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(118, 185, 0, 0.3);
+            border-radius: 6px;
+        }
+        
+        .service-links h4 {
+            color: #76b900;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        
+        .service-link-item {
+            margin: 8px 0;
+            padding: 12px 16px;
+            background: rgba(118, 185, 0, 0.1);
+            border: 1px solid rgba(118, 185, 0, 0.2);
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+        
+        .service-link-item:hover {
+            background: rgba(118, 185, 0, 0.15);
+            border-color: rgba(118, 185, 0, 0.4);
+        }
+        
+        .service-link-item a {
+            color: #76b900;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            display: block;
+        }
+        
+        .service-link-item a:hover {
+            color: #8fd400;
+        }
+        
+        .service-link-item .service-desc {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 12px;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body>
+    <button class="help-icon" id="helpBtn" title="Help">?</button>
+
+    <div class="container">
+        <div class="logo-container">
+            <svg viewBox="0 0 164 30" class="logo" id="logo" aria-label="NVIDIA">
+                <defs><path d="M157.725 29.99H.01V.048h157.715z"></path></defs>
+                <g fill="none" fill-rule="evenodd">
+                    <!-- Copyright symbol - white -->
+                    <path d="M160.352 24.069v-.449h.288c.157 0 .371.012.371.204 0 .208-.11.245-.296.245h-.363m0 .315h.192l.447.784h.49l-.494-.816c.255-.019.465-.14.465-.484 0-.427-.295-.565-.793-.565h-.721v1.865h.414v-.784m2.098-.146c0-1.095-.851-1.73-1.8-1.73-.955 0-1.805.635-1.805 1.73s.85 1.733 1.805 1.733c.948 0 1.8-.638 1.8-1.733m-.52 0c0 .798-.587 1.334-1.28 1.334v-.006c-.713.006-1.289-.53-1.289-1.328 0-.797.577-1.331 1.289-1.331.694 0 1.28.534 1.28 1.331" fill="#ffffff"></path>
+                    <!-- NVIDIA text - white -->
+                    <path d="M96.374 5.707l.002 19.66h5.552V5.707h-5.554zm-43.677-.026v19.686H58.3V10.086l4.37.014c1.437 0 2.43.345 3.123 1.084.879.936 1.237 2.444 1.237 5.205v8.978h5.427V14.49c0-7.763-4.948-8.81-9.789-8.81h-9.97zm52.617.027v19.659h9.006c4.798 0 6.364-.798 8.057-2.587 1.198-1.256 1.971-4.014 1.971-7.027 0-2.763-.655-5.228-1.797-6.763-2.057-2.745-5.02-3.282-9.445-3.282h-7.792zm5.508 4.28h2.387c3.463 0 5.703 1.556 5.703 5.591 0 4.037-2.24 5.592-5.703 5.592h-2.387V9.989zm-22.453-4.28l-4.634 15.58-4.44-15.579-5.993-.001 6.34 19.659h8.003l6.391-19.659H88.37zm38.563 19.659h5.553V5.709l-5.555-.001.002 19.659zm15.564-19.652l-7.753 19.645h5.475l1.227-3.472h9.175l1.161 3.472h5.944l-7.812-19.646-7.417.001zM146.1 9.3l3.364 9.204h-6.833l3.47-9.204z" fill="#ffffff"></path>
+                    <!-- NVIDIA logo/eye - green -->
+                    <path d="M16.889 8.985V6.28c.262-.02.528-.033.798-.042 7.4-.232 12.255 6.359 12.255 6.359s-5.244 7.282-10.866 7.282a6.82 6.82 0 01-2.187-.35v-8.204c2.88.348 3.46 1.62 5.192 4.508l3.852-3.248s-2.812-3.688-7.552-3.688c-.515 0-1.008.036-1.492.088zm0-8.938V4.09c.265-.021.531-.038.798-.048 10.29-.346 16.995 8.44 16.995 8.44s-7.7 9.364-15.723 9.364c-.735 0-1.424-.068-2.07-.183v2.498c.553.07 1.126.112 1.724.112 7.465 0 12.864-3.812 18.092-8.325.867.694 4.416 2.383 5.145 3.123-4.971 4.16-16.555 7.515-23.123 7.515a18.89 18.89 0 01-1.838-.096V30h28.375V.047H16.89zm0 19.482v2.133c-6.905-1.23-8.822-8.408-8.822-8.408s3.316-3.674 8.822-4.269v2.34l-.011-.001c-2.89-.347-5.147 2.353-5.147 2.353s1.265 4.544 5.158 5.852zM4.625 12.943s4.092-6.04 12.264-6.663V4.088C7.838 4.815 0 12.48 0 12.48s4.439 12.833 16.889 14.008V24.16C7.753 23.011 4.625 12.943 4.625 12.943z" fill="#76b900"></path>
+                </g>
+            </svg>
+        </div>
+
+        <div class="form-container">
+            <h1 id="heading">Deploy</h1>
+            
+            <!-- History mode banner -->
+            <div class="history-banner" id="historyBanner">
+                <h3>✓ Deployment Active</h3>
+                <p id="historyVersion">Version: --</p>
+                <p class="timestamp" id="historyTimestamp">Deployed: --</p>
+            </div>
+            
+            <!-- Service links (shown after successful deployment) -->
+            <div class="service-links" id="serviceLinks" style="display: none;">
+                <h4>🔗 Available Services</h4>
+                <div id="serviceLinksContainer"></div>
+            </div>
+            
+            <!-- Go to app button (shown in history mode) -->
+            <a href="/" class="go-to-app-btn" id="goToAppBtn" style="display: none;">
+                Open Application →
+            </a>
+
+            <form id="deployForm">
+                <!-- Legacy single API key field (hidden by default, shown if no input_fields) -->
+                <div class="form-group" id="legacyApiKeyGroup">
+                    <label for="apiKey">NGC API Key</label>
+                    <input
+                        type="password"
+                        id="apiKey"
+                        name="apiKey"
+                        placeholder="nvapi-..."
+                        autocomplete="off"
+                    >
+                </div>
+
+                <!-- Dynamic input fields will be injected here -->
+                <div id="dynamicInputFields"></div>
+
+                <div class="form-group version-group" id="versionGroup">
+                    <label for="version">Version</label>
+                    <select id="version" name="version"></select>
+                </div>
+
+                <div class="checkbox-wrapper" id="dryRunWrapper" style="display: none;">
+                    <input type="checkbox" id="dryRun" name="dryRun">
+                    <label for="dryRun" class="checkbox-label">Dry Run (Test Mode)</label>
+                </div>
+                <div class="checkbox-description" id="dryRunDescription" style="display: none;">
+                    Preview commands without executing
+                </div>
+
+                <button type="submit" id="submitBtn">
+                    🤙 Let it rip
+                </button>
+            </form>
+            
+            <!-- Uninstall button (shown in history mode) -->
+            <button type="button" class="btn-secondary" id="uninstallBtn" style="display: none;">
+                🗑️ Uninstall
+            </button>
+
+            <div class="message" id="message"></div>
+            <div class="stream-output" id="streamOutput"></div>
+            <div class="dry-run-output" id="dryRunOutput"></div>
+
+            <div class="footer">
+                Powered by NVIDIA Brev
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="helpModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="helpTitle">Help</h2>
+                <button class="modal-close" id="modalClose">&times;</button>
+            </div>
+            <div class="modal-body" id="helpBody">
+                Loading...
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('deployForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const message = document.getElementById('message');
+        const dryRunOutput = document.getElementById('dryRunOutput');
+        const streamOutput = document.getElementById('streamOutput');
+        const versionGroup = document.getElementById('versionGroup');
+        const versionSelect = document.getElementById('version');
+        const helpBtn = document.getElementById('helpBtn');
+        const helpModal = document.getElementById('helpModal');
+        const modalClose = document.getElementById('modalClose');
+        const helpBody = document.getElementById('helpBody');
+        const helpTitle = document.getElementById('helpTitle');
+        const historyBanner = document.getElementById('historyBanner');
+        const historyVersion = document.getElementById('historyVersion');
+        const historyTimestamp = document.getElementById('historyTimestamp');
+        const goToAppBtn = document.getElementById('goToAppBtn');
+        const uninstallBtn = document.getElementById('uninstallBtn');
+        const serviceLinks = document.getElementById('serviceLinks');
+        const serviceLinksContainer = document.getElementById('serviceLinksContainer');
+
+        let config = {};
+        let activeEventSource = null;
+        let historyMode = false;
+        
+        // Detect base path for API calls (handles /interlude or custom subpath)
+        function getBasePath() {
+            const path = window.location.pathname;
+            // Match common launcher paths - extend as needed
+            const match = path.match(/^(\/interlude|\/deploy|\/launcher|\/admin|\/\_launcher)/);
+            if (match) {
+                return match[1];
+            }
+            return '';
+        }
+        let basePath = getBasePath();
+        
+        // Helper for API calls that respects the base path
+        function apiUrl(endpoint) {
+            return basePath + endpoint;
+        }
+        
+        console.log('Interlude base path:', basePath || '(root)');
+        
+        // Derive NeMo service URLs from current hostname
+        // Single-origin mode: all URLs point to the same origin
+        // This avoids CORS issues with Cloudflare Access blocking OPTIONS preflight
+        function getNemoUrls() {
+            const origin = window.location.origin;
+            const hostname = window.location.hostname;
+            
+            // Single-origin: all services accessed via same hostname
+            // nginx does path-based routing to the correct backend
+            const urls = {
+                platformUrl: origin,
+                nimProxyUrl: origin,
+                dataStoreUrl: origin,
+                // Ingress hosts all the same (for K8s ingress config)
+                ingressHost: hostname,
+                nimProxyHost: hostname,
+                dataStoreHost: hostname
+            };
+            
+            console.log('NeMo URLs (single-origin mode):', urls);
+            return urls;
+        }
+
+
+        // Load configuration
+        async function loadConfig() {
+            try {
+                const response = await fetch(apiUrl('/config'));
+                config = await response.json();
+
+                // Set heading from config
+                if (config.heading) {
+                    document.getElementById('heading').textContent = config.heading;
+                }
+                
+                // Set page title
+                if (config.project_name) {
+                    document.title = config.project_name;
+                }
+
+                // Handle dynamic input fields
+                const dynamicContainer = document.getElementById('dynamicInputFields');
+                const legacyApiKeyGroup = document.getElementById('legacyApiKeyGroup');
+                
+                if (config.input_fields && config.input_fields.length > 0) {
+                    // Hide legacy API key field, show dynamic fields
+                    legacyApiKeyGroup.style.display = 'none';
+                    dynamicContainer.innerHTML = '';
+                    
+                    config.input_fields.forEach(field => {
+                        const formGroup = document.createElement('div');
+                        formGroup.className = 'form-group';
+                        
+                        const label = document.createElement('label');
+                        label.setAttribute('for', field.id);
+                        label.textContent = field.label;
+                        
+                        const input = document.createElement('input');
+                        input.type = field.type || 'text';
+                        input.id = field.id;
+                        input.name = field.id;
+                        input.placeholder = field.placeholder || '';
+                        input.autocomplete = 'off';
+                        if (field.required) {
+                            input.required = true;
+                        }
+                        
+                        formGroup.appendChild(label);
+                        formGroup.appendChild(input);
+                        dynamicContainer.appendChild(formGroup);
+                    });
+                } else {
+                    // Show legacy API key field
+                    legacyApiKeyGroup.style.display = 'block';
+                    document.getElementById('apiKey').required = true;
+                }
+
+                if (config.show_version_selector && config.versions && config.versions.length > 0) {
+                    versionGroup.classList.add('show');
+                    versionSelect.innerHTML = '';
+                    config.versions.forEach(v => {
+                        const opt = document.createElement('option');
+                        opt.value = v;
+                        opt.textContent = v;
+                        if (v === config.default_version) {
+                            opt.selected = true;
+                        }
+                        versionSelect.appendChild(opt);
+                    });
+                }
+
+                // Show/hide dry run option based on config (default: hidden)
+                if (config.show_dry_run) {
+                    document.getElementById('dryRunWrapper').style.display = 'flex';
+                    document.getElementById('dryRunDescription').style.display = 'block';
+                }
+                
+                // Check if already deployed (history mode)
+                if (config.deployed) {
+                    enterHistoryMode();
+                }
+                
+                // Render service links if available
+                if (config.services && config.services.length > 0) {
+                    renderServiceLinks(config.services);
+                }
+            } catch (error) {
+                console.error('Failed to load config:', error);
+            }
+        }
+        
+        // Enter history mode (deployment already exists)
+        function enterHistoryMode() {
+            historyMode = true;
+            
+            // Show history banner
+            historyBanner.classList.add('show');
+            if (config.deployed_version) {
+                historyVersion.textContent = `Version: ${config.deployed_version}`;
+            }
+            if (config.deployed_at) {
+                const date = new Date(config.deployed_at);
+                historyTimestamp.textContent = `Deployed: ${date.toLocaleString()}`;
+            }
+            
+            // Update heading
+            document.getElementById('heading').textContent = 'Deployment Status';
+            
+            // Show "Go to App" button
+            goToAppBtn.style.display = 'block';
+            
+            // Disable deploy form
+            submitBtn.classList.add('btn-disabled');
+            submitBtn.textContent = '✓ Already Deployed';
+            submitBtn.disabled = true;
+            
+            // Disable all input fields
+            if (config.input_fields && config.input_fields.length > 0) {
+                config.input_fields.forEach(field => {
+                    const input = document.getElementById(field.id);
+                    if (input) {
+                        input.disabled = true;
+                        input.placeholder = 'Deployment already active';
+                    }
+                });
+            } else {
+                document.getElementById('apiKey').disabled = true;
+                document.getElementById('apiKey').placeholder = 'Deployment already active';
+            }
+            
+            versionSelect.disabled = true;
+            
+            // Show uninstall button if available
+            if (config.has_uninstall) {
+                uninstallBtn.style.display = 'block';
+            }
+        }
+        
+        // Exit history mode (after uninstall)
+        function exitHistoryMode() {
+            historyMode = false;
+            
+            historyBanner.classList.remove('show');
+            goToAppBtn.style.display = 'none';
+            uninstallBtn.style.display = 'none';
+            serviceLinks.style.display = 'none';
+            
+            document.getElementById('heading').textContent = config.heading || 'Deploy';
+            
+            submitBtn.classList.remove('btn-disabled');
+            submitBtn.textContent = '🤙 Let it rip';
+            submitBtn.disabled = false;
+            
+            // Re-enable all input fields
+            if (config.input_fields && config.input_fields.length > 0) {
+                config.input_fields.forEach(field => {
+                    const input = document.getElementById(field.id);
+                    if (input) {
+                        input.disabled = false;
+                        input.placeholder = field.placeholder || '';
+                    }
+                });
+            } else {
+                document.getElementById('apiKey').disabled = false;
+                document.getElementById('apiKey').placeholder = 'nvapi-...';
+            }
+            
+            versionSelect.disabled = false;
+        }
+
+        // Help modal
+        helpBtn.addEventListener('click', async () => {
+            helpModal.classList.add('show');
+            try {
+                const response = await fetch(apiUrl('/help'));
+                const helpData = await response.json();
+                helpTitle.textContent = helpData.title || 'Help';
+                helpBody.innerHTML = '';
+
+                if (helpData.sections) {
+                    helpData.sections.forEach(section => {
+                        const div = document.createElement('div');
+                        div.className = 'help-section';
+
+                        const h3 = document.createElement('h3');
+                        if (section.icon) {
+                            h3.innerHTML = `<span>${section.icon}</span> ${section.title}`;
+                        } else {
+                            h3.textContent = section.title;
+                        }
+
+                        const p = document.createElement('p');
+                        // Parse basic markdown: **bold**, URLs, and code blocks
+                        let html = section.content
+                            .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')  // **bold**
+                            .replace(/`([^`]+)`/g, '<code style="background:rgba(255,255,255,0.1);padding:2px 6px;border-radius:3px;font-size:13px;">$1</code>')  // `code`
+                            .replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank">$1</a>');  // URLs
+                        p.innerHTML = html;
+
+                        div.appendChild(h3);
+                        div.appendChild(p);
+                        helpBody.appendChild(div);
+                    });
+                }
+            } catch (error) {
+                helpBody.innerHTML = '<p>Failed to load help content.</p>';
+            }
+        });
+
+        modalClose.addEventListener('click', () => {
+            helpModal.classList.remove('show');
+        });
+
+        helpModal.addEventListener('click', (e) => {
+            if (e.target === helpModal) {
+                helpModal.classList.remove('show');
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && helpModal.classList.contains('show')) {
+                helpModal.classList.remove('show');
+            }
+        });
+        
+        // Uninstall button with streaming output
+        uninstallBtn.addEventListener('click', async () => {
+            if (!confirm('Are you sure you want to uninstall? This will remove the deployed application.')) {
+                return;
+            }
+            
+            uninstallBtn.disabled = true;
+            uninstallBtn.innerHTML = 'Uninstalling<span class="spinner"></span>';
+            message.classList.remove('show');
+            streamOutput.innerHTML = '';
+            streamOutput.classList.add('show');
+            
+            fetch(apiUrl('/uninstall'), {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            }).then(response => {
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                let buffer = '';
+                
+                function processStream() {
+                    reader.read().then(({ done, value }) => {
+                        if (done) {
+                            // Uninstall complete - exit history mode
+                            setTimeout(() => {
+                                exitHistoryMode();
+                                loadConfig();
+                            }, 1500);
+                            return;
+                        }
+                        
+                        buffer += decoder.decode(value, { stream: true });
+                        const lines = buffer.split('\n');
+                        buffer = lines.pop();
+                        
+                        lines.forEach(line => {
+                            if (line.startsWith('data: ')) {
+                                try {
+                                    const data = JSON.parse(line.slice(6));
+                                    appendStreamLine(data);
+                                    
+                                    // Check for complete signal
+                                    if (data.type === 'complete') {
+                                        if (data.success) {
+                                            showMessage('Uninstall completed!', 'success');
+                                        }
+                                    }
+                                } catch (e) {
+                                    // Ignore parse errors
+                                }
+                            }
+                        });
+                        
+                        streamOutput.scrollTop = streamOutput.scrollHeight;
+                        processStream();
+                    }).catch(error => {
+                        appendStreamLine({ type: 'error', message: 'Stream error: ' + error.message });
+                        uninstallBtn.disabled = false;
+                        uninstallBtn.textContent = '🗑️ Uninstall';
+                    });
+                }
+                
+                processStream();
+            }).catch(error => {
+                showMessage('Uninstall failed: ' + error.message, 'error');
+                uninstallBtn.disabled = false;
+                uninstallBtn.textContent = '🗑️ Uninstall';
+            });
+        });
+
+        // Form submission
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            // Block submission in history mode
+            if (historyMode) {
+                showMessage('Deployment already active. Uninstall first to redeploy.', 'error');
+                return;
+            }
+
+            // Collect input data based on config
+            let apiKey = '';
+            let inputData = {};
+            
+            if (config.input_fields && config.input_fields.length > 0) {
+                // Collect dynamic input fields
+                config.input_fields.forEach(field => {
+                    const input = document.getElementById(field.id);
+                    if (input) {
+                        inputData[field.id] = input.value;
+                    }
+                });
+            } else {
+                // Legacy single API key
+                apiKey = document.getElementById('apiKey').value;
+            }
+            
+            const version = versionSelect.value;
+            const dryRun = document.getElementById('dryRun').checked;
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = (dryRun ? 'Analyzing' : 'Deploying') + '<span class="spinner"></span>';
+            message.classList.remove('show');
+            dryRunOutput.classList.remove('show');
+            streamOutput.classList.remove('show');
+            streamOutput.innerHTML = '';
+
+            // Close any existing event source
+            if (activeEventSource) {
+                activeEventSource.close();
+                activeEventSource = null;
+            }
+
+            if (dryRun) {
+                // Dry run uses the regular endpoint for structured response
+                try {
+                    const response = await fetch(apiUrl('/deploy'), {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ apiKey, inputData, version, dryRun: true, ...getNemoUrls() })
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok && data.dry_run) {
+                        showDryRun(data);
+                        showMessage(data.message || 'Dry run complete', 'success');
+                    } else {
+                        showMessage(data.error || 'Deployment failed', 'error');
+                    }
+                } catch (error) {
+                    showMessage('Network error: ' + error.message, 'error');
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = '🤙 Let it rip';
+                }
+            } else {
+                // Real deployment uses streaming endpoint
+                streamOutput.classList.add('show');
+                deployWithStreaming(apiKey, version, inputData);
+            }
+        });
+
+        function deployWithStreaming(apiKey, version, inputData = {}) {
+            // Use fetch with ReadableStream for SSE since we need to POST
+            fetch(apiUrl('/deploy/stream'), {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ apiKey, inputData, version, ...getNemoUrls() })
+            }).then(response => {
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                let buffer = '';
+
+                function processStream() {
+                    reader.read().then(({ done, value }) => {
+                        if (done) {
+                            submitBtn.disabled = false;
+                            submitBtn.textContent = '🤙 Let it rip';
+                            return;
+                        }
+
+                        buffer += decoder.decode(value, { stream: true });
+                        const lines = buffer.split('\n');
+                        buffer = lines.pop(); // Keep incomplete line in buffer
+
+                        lines.forEach(line => {
+                            if (line.startsWith('data: ')) {
+                                try {
+                                    const data = JSON.parse(line.slice(6));
+                                    appendStreamLine(data);
+                                } catch (e) {
+                                    // Ignore parse errors
+                                }
+                            }
+                        });
+
+                        // Auto-scroll to bottom
+                        streamOutput.scrollTop = streamOutput.scrollHeight;
+
+                        processStream();
+                    }).catch(error => {
+                        appendStreamLine({ type: 'error', message: 'Stream error: ' + error.message });
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = '🤙 Let it rip';
+                    });
+                }
+
+                processStream();
+            }).catch(error => {
+                showMessage('Network error: ' + error.message, 'error');
+                submitBtn.disabled = false;
+                submitBtn.textContent = '🤙 Let it rip';
+            });
+        }
+
+        function appendStreamLine(data) {
+            const line = document.createElement('div');
+            line.className = 'stream-line ' + (data.type || 'output');
+
+            let prefix = '';
+            switch (data.type) {
+                case 'start':
+                    prefix = '▶ ';
+                    break;
+                case 'section':
+                    prefix = '━━━ ';
+                    break;
+                case 'command':
+                    prefix = '$ ';
+                    break;
+                case 'error':
+                    prefix = '✗ ';
+                    showMessage(data.message, 'error');
+                    break;
+                case 'success':
+                    prefix = '✓ ';
+                    showMessage(data.message, 'success');
+                    break;
+                case 'info':
+                    prefix = 'ℹ ';
+                    break;
+                case 'pods':
+                    // Clear previous pod lines before showing new status
+                    const oldPods = streamOutput.querySelectorAll('.stream-line.pod');
+                    oldPods.forEach(p => p.remove());
+                    const oldPodsHeader = streamOutput.querySelector('.stream-line.pods');
+                    if (oldPodsHeader) oldPodsHeader.remove();
+                    prefix = '';
+                    break;
+                case 'pod':
+                    prefix = '  ';
+                    break;
+                case 'link':
+                    // Render as clickable button/link
+                    const link = document.createElement('a');
+                    link.href = data.url || '#';
+                    link.textContent = data.message || 'Link';
+                    link.target = '_blank';
+                    line.appendChild(link);
+                    streamOutput.appendChild(line);
+                    return;
+                case 'service':
+                    // Render service link in stream and also add to persistent service links
+                    const serviceLink = document.createElement('a');
+                    serviceLink.href = data.url || '#';
+                    serviceLink.textContent = data.name || 'Service';
+                    serviceLink.target = '_blank';
+                    
+                    if (data.description) {
+                        const desc = document.createElement('div');
+                        desc.className = 'service-desc';
+                        desc.textContent = data.description;
+                        line.appendChild(serviceLink);
+                        line.appendChild(desc);
+                    } else {
+                        line.appendChild(serviceLink);
+                    }
+                    streamOutput.appendChild(line);
+                    return;
+                case 'complete':
+                    // On completion, reload config to get services from persistent state
+                    loadConfig();
+                    return;
+            }
+
+            line.textContent = prefix + (data.message || '');
+            streamOutput.appendChild(line);
+        }
+
+        function showMessage(text, type) {
+            message.textContent = text;
+            message.className = 'message show ' + type;
+        }
+
+        function showDryRun(data) {
+            if (!data.would_execute) return;
+
+            const exec = data.would_execute;
+            let html = '<div class="dry-run-section">';
+            html += '<div class="dry-run-title">🔍 Dry Run Results</div>';
+            html += '<p style="margin-bottom:12px;color:rgba(255,255,255,0.7);">Commands that would be executed:</p></div>';
+
+            html += '<div class="dry-run-section">';
+            html += '<div class="dry-run-title">Environment</div>';
+            html += '<div class="dry-run-command">';
+            html += `Working Directory: ${exec.working_directory}<br>`;
+            for (const [key, val] of Object.entries(exec.environment)) {
+                html += `${key}=${val}<br>`;
+            }
+            html += '</div></div>';
+
+            if (exec.pre_commands && exec.pre_commands.length > 0) {
+                html += '<div class="dry-run-section">';
+                html += '<div class="dry-run-title">Pre-Commands</div>';
+                exec.pre_commands.forEach((cmd, i) => {
+                    html += `<div class="dry-run-command">${i + 1}. ${cmd}</div>`;
+                });
+                html += '</div>';
+            }
+
+            html += '<div class="dry-run-section">';
+            html += '<div class="dry-run-title">Main Command</div>';
+            html += `<div class="dry-run-command">${exec.main_command}</div>`;
+            html += '</div>';
+
+            html += '<div style="padding:12px;background:rgba(118,185,0,0.15);border:1px solid rgba(118,185,0,0.3);border-radius:4px;color:#76b900;margin-top:12px;">';
+            html += '✓ No commands were executed (dry-run mode)';
+            html += '</div>';
+
+            dryRunOutput.innerHTML = html;
+            dryRunOutput.classList.add('show');
+        }
+        
+        function renderServiceLinks(services) {
+            /**
+             * Render service links in the persistent service links container.
+             * Services should be array of {name, url, description} objects.
+             */
+            if (!services || services.length === 0) {
+                serviceLinks.style.display = 'none';
+                return;
+            }
+            
+            serviceLinksContainer.innerHTML = '';
+            
+            services.forEach(service => {
+                const item = document.createElement('div');
+                item.className = 'service-link-item';
+                
+                const link = document.createElement('a');
+                link.href = service.url || '#';
+                link.textContent = service.name || 'Service';
+                link.target = '_blank';
+                link.rel = 'noopener noreferrer';
+                
+                item.appendChild(link);
+                
+                if (service.description) {
+                    const desc = document.createElement('div');
+                    desc.className = 'service-desc';
+                    desc.textContent = service.description;
+                    item.appendChild(desc);
+                }
+                
+                serviceLinksContainer.appendChild(item);
+            });
+            
+            serviceLinks.style.display = 'block';
+        }
+
+        // Check if deployment is running and reconnect to logs
+        async function checkDeploymentStatus() {
+            try {
+                const response = await fetch(apiUrl('/deploy/status'));
+                const status = await response.json();
+                
+                if (status.is_running) {
+                    // Deployment in progress - reconnect to logs
+                    showMessage('Deployment in progress - reconnecting to logs...', 'success');
+                    streamOutput.classList.add('show');
+                    streamOutput.innerHTML = '';
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = 'Deploying<span class="spinner"></span>';
+                    
+                    reconnectToLogs();
+                } else if (status.status !== 'idle' && status.log_count > 0) {
+                    // Previous deployment exists - offer to view logs
+                    const statusText = status.status === 'success' ? '✓ Previous deployment succeeded' :
+                                      status.status === 'failed' ? '✗ Previous deployment failed' :
+                                      status.status === 'timeout' ? '⏱ Previous deployment timed out' :
+                                      'Previous deployment status: ' + status.status;
+                    showMessage(statusText + ' - click to view logs', status.status === 'success' ? 'success' : 'error');
+                    message.style.cursor = 'pointer';
+                    message.onclick = () => {
+                        message.onclick = null;
+                        message.style.cursor = 'default';
+                        reconnectToLogs();
+                    };
+                }
+            } catch (error) {
+                console.log('Status check failed:', error);
+            }
+        }
+
+        function reconnectToLogs() {
+            streamOutput.classList.add('show');
+            streamOutput.innerHTML = '';
+            
+            fetch(apiUrl('/deploy/logs')).then(response => {
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                let buffer = '';
+
+                function processStream() {
+                    reader.read().then(({ done, value }) => {
+                        if (done) {
+                            submitBtn.disabled = false;
+                            submitBtn.textContent = '🤙 Let it rip';
+                            return;
+                        }
+
+                        buffer += decoder.decode(value, { stream: true });
+                        const lines = buffer.split('\n');
+                        buffer = lines.pop();
+
+                        lines.forEach(line => {
+                            if (line.startsWith('data: ')) {
+                                try {
+                                    const data = JSON.parse(line.slice(6));
+                                    if (data.type === 'stream_end') {
+                                        if (data.status === 'success') {
+                                            showMessage('Deployment completed successfully!', 'success');
+                                        } else if (data.status === 'failed') {
+                                            showMessage('Deployment failed', 'error');
+                                        }
+                                    } else {
+                                        appendStreamLine(data);
+                                    }
+                                } catch (e) {}
+                            }
+                        });
+
+                        streamOutput.scrollTop = streamOutput.scrollHeight;
+                        processStream();
+                    }).catch(error => {
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = '🤙 Let it rip';
+                    });
+                }
+
+                processStream();
+            });
+        }
+
+        // Initialize
+        loadConfig();
+        checkDeploymentStatus();
+    </script>
+</body>
+</html>

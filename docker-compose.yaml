@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  reachy_pipecat:
+    image: ghcr.io/liveaverage/reachy-mini-pipecat:latest
+    container_name: reachy_pipecat
+    restart: unless-stopped
+    network_mode: host
+    shm_size: 2gb
+    environment:
+      - NVIDIA_DRIVER_CAPABILITIES=all
+      - NVIDIA_VISIBLE_DEVICES=all
+      - REACHY_SCENE=minimal
+      - RESOLUTION=1024x768
+      - NVIDIA_API_KEY=${NVIDIA_API_KEY}
+      - ELEVENLABS_API_KEY=${ELEVENLABS_API_KEY}
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+

@@ -38,10 +38,13 @@ INSTALL_DIR=/opt/r2sim-launcher curl -fsSL https://raw.githubusercontent.com/liv
 - Docker installed and running with GPU support
 - NVIDIA GPU with drivers installed (525.60.13 or newer)
 - nvidia-container-toolkit configured
+- **Docker Compose V2** (built into modern Docker) or legacy `docker-compose` binary
 - Python 3.8+ (for native mode) or Docker (for containerized mode)
 - API Keys:
   - NVIDIA API Key from https://build.nvidia.com/
   - ElevenLabs API Key from https://elevenlabs.io/
+
+**Note on Docker Compose:** The launcher automatically detects and uses either `docker compose` (V2) or `docker-compose` (V1 standalone). Both are supported.
 
 ### Verify GPU Access
 

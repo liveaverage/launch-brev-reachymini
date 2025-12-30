@@ -290,6 +290,48 @@ def cleanup_env_file(working_dir='.'):
         logger.error(f"✗ Failed to remove .env file: {e}")
         return False
 
+def normalize_docker_compose_command(command):
+    """
+    Normalize docker-compose commands to work with both legacy and modern syntax.
+    
+    Detects available command:
+    - Modern: 'docker compose' (Docker Compose V2, built into Docker CLI)
+    - Legacy: 'docker-compose' (standalone binary)
+    
+    Returns: Command string with correct syntax for the current environment
+    """
+    # Check if modern 'docker compose' is available
+    try:
+        result = subprocess.run(
+            ["docker", "compose", "version"],
+            capture_output=True,
+            timeout=5
+        )
+        if result.returncode == 0:
+            # Modern syntax available, ensure command uses it
+            logger.info("Detected: docker compose (V2)")
+            return command.replace('docker-compose', 'docker compose')
+    except Exception:
+        pass
+    
+    # Check if legacy 'docker-compose' is available
+    try:
+        result = subprocess.run(
+            ["docker-compose", "version"],
+            capture_output=True,
+            timeout=5
+        )
+        if result.returncode == 0:
+            # Legacy syntax available, ensure command uses it
+            logger.info("Detected: docker-compose (V1)")
+            return command.replace('docker compose', 'docker-compose')
+    except Exception:
+        pass
+    
+    # Default: return as-is and let it fail with helpful error
+    logger.warning("Neither 'docker compose' nor 'docker-compose' found")
+    return command
+
 def execute_command(command, working_dir, env, timeout=300, stream_queue=None):
     """Execute a shell command and return result, optionally streaming output"""
     logger.info(f"Executing: {command}")
@@ -612,9 +654,12 @@ def deploy_stream():
             # Execute pre-commands (synchronously)
             for idx, pre_cmd in enumerate(pre_commands, 1):
                 yield emit_log({'type': 'section', 'message': f'Pre-command {idx}/{len(pre_commands)}'})
-                yield emit_log({'type': 'command', 'message': pre_cmd})
+                
+                # Normalize docker-compose commands for compatibility
+                normalized_cmd = normalize_docker_compose_command(pre_cmd)
+                yield emit_log({'type': 'command', 'message': normalized_cmd})
 
-                result = execute_command(pre_cmd, working_dir, env, timeout=600, stream_queue=log_queue)
+                result = execute_command(normalized_cmd, working_dir, env, timeout=600, stream_queue=log_queue)
 
                 # Send queued output
                 while not log_queue.empty():
@@ -629,13 +674,16 @@ def deploy_stream():
 
             # Execute main command asynchronously while monitoring pods
             yield emit_log({'type': 'section', 'message': 'Main Deployment'})
-            yield emit_log({'type': 'command', 'message': command})
+            
+            # Normalize docker-compose commands for compatibility
+            normalized_command = normalize_docker_compose_command(command)
+            yield emit_log({'type': 'command', 'message': normalized_command})
 
             # Start helm install in background thread
             result_holder = {'done': False, 'returncode': None, 'stdout': ''}
             cmd_thread = threading.Thread(
                 target=run_command_async,
-                args=(command, working_dir, env, result_holder, log_queue)
+                args=(normalized_command, working_dir, env, result_holder, log_queue)
             )
             cmd_thread.start()
 
@@ -724,9 +772,12 @@ def deploy_stream():
                     yield emit_log({'type': 'section', 'message': 'Post-deployment setup'})
                     for idx, post_cmd in enumerate(post_commands, 1):
                         yield emit_log({'type': 'info', 'message': f'Post-command {idx}/{len(post_commands)}'})
-                        yield emit_log({'type': 'command', 'message': post_cmd})
                         
-                        result = execute_command(post_cmd, working_dir, env, timeout=120, stream_queue=log_queue)
+                        # Normalize docker-compose commands for compatibility
+                        normalized_post = normalize_docker_compose_command(post_cmd)
+                        yield emit_log({'type': 'command', 'message': normalized_post})
+                        
+                        result = execute_command(normalized_post, working_dir, env, timeout=120, stream_queue=log_queue)
                         
                         # Send queued output
                         while not log_queue.empty():
@@ -982,13 +1033,16 @@ def uninstall():
             all_success = True
             for i, cmd in enumerate(uninstall_commands, 1):
                 yield f"data: {json.dumps({'type': 'section', 'message': f'Command {i}/{len(uninstall_commands)}'})}\n\n"
-                yield f"data: {json.dumps({'type': 'command', 'message': cmd})}\n\n"
                 
-                logger.info(f"Uninstall command: {cmd}")
+                # Normalize docker-compose commands for compatibility
+                normalized_cmd = normalize_docker_compose_command(cmd)
+                yield f"data: {json.dumps({'type': 'command', 'message': normalized_cmd})}\n\n"
+                
+                logger.info(f"Uninstall command: {normalized_cmd}")
                 
                 try:
                     process = subprocess.Popen(
-                        cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                        normalized_cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
                         text=True, cwd=working_dir, env=env
                     )
                     

@@ -40,13 +40,13 @@
       }
     ],
     "pre_commands": [
-      "docker-compose -f docker-compose.yaml pull"
+      "docker compose -f docker-compose.yaml pull"
     ],
-    "command": "docker-compose -f docker-compose.yaml up -d",
+    "command": "docker compose -f docker-compose.yaml up -d",
     "post_commands": [],
     "uninstall_commands": [
-      "docker-compose -f docker-compose.yaml down",
-      "docker-compose -f docker-compose.yaml rm -f"
+      "docker compose -f docker-compose.yaml down",
+      "docker compose -f docker-compose.yaml rm -f"
     ]
   }
 }

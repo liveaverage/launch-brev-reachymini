@@ -9,17 +9,17 @@
     {
       "title": "Required API Keys",
       "icon": "🔑",
-      "content": "**NVIDIA API Key**: Required for NVIDIA NIM (NVIDIA Inference Microservices) access. Get your key at https://build.nvidia.com/\n\n**ElevenLabs API Key**: Required for text-to-speech voice synthesis in the AI interaction system. Sign up at https://elevenlabs.io/ to obtain your API key.\n\nBoth keys are securely passed as environment variables to the container and are not stored."
+      "content": "**NVIDIA API Key**: Required for NVIDIA NIM (NVIDIA Inference Microservices) access.\n\n→ Get your key at: **https://build.nvidia.com/**\n\n**ElevenLabs API Key**: Required for text-to-speech voice synthesis in the AI interaction system.\n\n→ Sign up at: **https://elevenlabs.io/**\n\nBoth keys are securely passed as environment variables to the container and persisted to `.env` file with restricted permissions (600)."
     },
     {
       "title": "Quick Start",
       "icon": "🚀",
-      "content": "1. Enter your **NVIDIA API Key** (starts with `nvapi-`)\n2. Enter your **ElevenLabs API Key** (starts with `sk_`)\n3. Click **🤙 Let it rip** to deploy\n4. Wait for the container to pull and start (first run may take 5-10 minutes)\n5. Once complete, **service links will appear** for:\n   - noVNC Simulation (port 6080)\n   - Pipecat Dashboard (port 7860)\n\nThe deployment uses Docker Compose with GPU passthrough and host networking for optimal performance."
+      "content": "1. Enter your **NVIDIA API Key** (starts with `nvapi-`)\n2. Enter your **ElevenLabs API Key** (starts with `sk_`)\n3. Click **🤙 Let it rip** to deploy\n4. Wait for the container to pull and start (first run may take 5-10 minutes)\n5. Once complete, **service links will appear** for:\n   - noVNC Simulation (tunnel-based URL)\n   - Pipecat Dashboard (direct IP for WebRTC)\n\nThe deployment uses Docker Compose with GPU passthrough and host networking for optimal performance."
     },
     {
       "title": "Technical Details",
       "icon": "⚙️",
-      "content": "**Image**: `ghcr.io/liveaverage/reachy-mini-pipecat:latest`\n**Network Mode**: Host network (required for Isaac Sim)\n**GPU**: All available NVIDIA GPUs with full capabilities\n**Shared Memory**: 2GB (required for rendering)\n**Scene**: Minimal environment (`REACHY_SCENE=minimal`)\n**Resolution**: 1024x768\n\n**Exposed Services**:\n- noVNC at port 6080 (path: `/vnc.html`)\n- Pipecat Dashboard at port 7860\n\nThe container runs with `--restart unless-stopped` for automatic recovery. Service links are automatically configured based on your access method (public IP or domain)."
+      "content": "**Image**: `ghcr.io/liveaverage/reachy-mini-pipecat:latest`\n**Network Mode**: Host network (required for Isaac Sim)\n**GPU**: All available NVIDIA GPUs with full capabilities\n**Shared Memory**: 2GB (required for rendering)\n**Scene**: Minimal environment (`REACHY_SCENE=minimal`)\n**Resolution**: 1024x768\n\n**Exposed Services**:\n- noVNC at port 6080 (path: `/vnc.html`)\n- Pipecat Dashboard at port 7860\n\nThe container runs with `--restart unless-stopped` for automatic recovery. Service links are automatically configured using tunnel-based domains for noVNC and direct IP for Pipecat WebRTC."
     },
     {
       "title": "Uninstalling",
@@ -29,7 +29,7 @@
     {
       "title": "Troubleshooting",
       "icon": "🐛",
-      "content": "**Common Issues:**\n\n• **Container fails to start** - Verify GPU drivers are installed and accessible\n• **API key errors** - Double-check both API keys are valid and have not expired\n• **Port conflicts** - Ensure no other services are using required ports (host network mode)\n• **Slow startup** - First pull can take 5-10 minutes depending on network speed\n\n**Check container logs**: `docker logs reachy_pipecat`\n**Check container status**: `docker ps -a`\n**Restart deployment**: Use the Uninstall button, then redeploy"
+      "content": "**Common Issues:**\n\n• **Container fails to start** - Verify GPU drivers are installed and accessible\n• **API key errors** - Double-check both API keys are valid and have not expired\n  - Verify NVIDIA API key at: **https://build.nvidia.com/**\n  - Verify ElevenLabs API key at: **https://elevenlabs.io/**\n• **Port conflicts** - Ensure no other services are using required ports (host network mode)\n• **Slow startup** - First pull can take 5-10 minutes depending on network speed\n\n**Check container logs**: `docker logs reachy_pipecat`\n**Check container status**: `docker ps -a`\n**Restart deployment**: Use the Uninstall button, then redeploy"
     },
     {
       "title": "GPU Requirements",
@@ -39,7 +39,7 @@
     {
       "title": "Security Note",
       "icon": "🔒",
-      "content": "Your API keys are:\n• Passed as environment variables to the container\n• NOT stored permanently by this application\n• Only accessible within the running container\n• Required for AI inference and TTS services\n\nNever share your API keys or commit them to version control."
+      "content": "**API Keys**:\n• Passed as environment variables to the container\n• Persisted to `.env` file with 600 permissions for Docker Compose\n• Only accessible within the running container\n• Required for AI inference and TTS services\n\n**VNC Access**:\n• No password required\n• Accessed via secure tunnel (HTTPS)\n• No direct port exposure required\n\nNever share your API keys or commit them to version control."
     }
   ]
 }

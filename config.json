@@ -30,7 +30,7 @@
     "services": [
       {
         "name": "Open noVNC Simulation",
-        "url": "https://${HOST_IP}:6090/vnc.html",
+        "url": "https://novnc${BASE_DOMAIN}/vnc.html",
         "description": "Interactive robot simulation via noVNC"
       },
       {

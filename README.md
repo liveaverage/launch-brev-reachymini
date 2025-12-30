@@ -17,38 +17,6 @@
 
 ---
 
-## ✨ Features
-
-<table>
-<tr>
-<td width="50%">
-
-### 🖥️ Clean Web Interface
-Brev/NVIDIA-inspired console design with real-time streaming logs and deployment state management.
-
-### 🔑 Dynamic Input Fields
-Flexible configuration system—add API keys or secrets without touching code.
-
-### 🐳 Docker Compose Deployment
-GPU passthrough, host networking, and automatic container lifecycle management.
-
-</td>
-<td width="50%">
-
-### 📦 Secret Persistence
-`.env` file management like Kubernetes secrets—API keys persist across restarts.
-
-### 🔗 Smart Service Links
-Auto-generated URLs with runtime substitution for `${HOST_IP}` and `${BASE_DOMAIN}`.
-
-### ⚡ Lightweight Backend
-Minimal Flask app with zero framework bloat.
-
-</td>
-</tr>
-</table>
-
----
 
 ## 🚀 Quick Start
 

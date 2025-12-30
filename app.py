@@ -171,8 +171,11 @@ def get_host_ip():
 def extract_base_domain(host_header):
     """
     Extract base domain suffix from Host header.
-    Example: 'studio-lccpkmz8f.brevlab.com' -> '-lccpkmz8f.brevlab.com'
-    Returns the suffix starting from the first hyphen after the subdomain.
+    Examples: 
+      - 'studio-lccpkmz8f.brevlab.com' -> '-lccpkmz8f.brevlab.com'
+      - 'interlude0-uplcf60xo.brevlab.com' -> '0-uplcf60xo.brevlab.com'
+    
+    Returns the suffix starting from the first hyphen (including any numeric prefix).
     """
     if not host_header:
         return None
@@ -181,9 +184,11 @@ def extract_base_domain(host_header):
         # Remove port if present
         host = host_header.split(':')[0]
         
-        # Find the first hyphen and extract everything after it (including the hyphen)
+        # Find the first hyphen and extract everything from any digits before it
+        # Pattern: optional digits followed by hyphen, then the rest
+        # e.g., 'interlude0-uplcf60xo.brevlab.com' -> '0-uplcf60xo.brevlab.com'
         # e.g., 'studio-lccpkmz8f.brevlab.com' -> '-lccpkmz8f.brevlab.com'
-        match = re.search(r'(-[^.]+\..+)$', host)
+        match = re.search(r'([0-9]*-[^.]+\..+)$', host)
         if match:
             base_domain = match.group(1)
             logger.info(f"Extracted BASE_DOMAIN: {base_domain} from {host}")

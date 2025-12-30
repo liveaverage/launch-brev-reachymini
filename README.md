@@ -20,6 +20,35 @@
 
 ## 🚀 Quick Start
 
+### Deploy Instantly with NVIDIA Brev
+
+<p align="center">
+  <em>Skip the setup—launch a fully configured Reachy Mini simulation environment in seconds</em>
+</p>
+
+<table align="center">
+<thead>
+<tr>
+<th align="center">GPU</th>
+<th align="center">VRAM</th>
+<th align="center">Best For</th>
+<th align="center">Deploy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center"><strong>🔵 NVIDIA L4</strong></td>
+<td align="center">24 GB</td>
+<td align="center">General Simulation & Training</td>
+<td align="center"><a href="https://brev.nvidia.com/launchable/deploy?launchableID=env-37ZZY950tDIuCQSSHXIKSGpRbFJ"><img src="https://brev-assets.s3.us-west-1.amazonaws.com/nv-lb-dark.svg" alt="Deploy on Brev" height="40"/></a></td>
+</tr>
+</tbody>
+</table>
+
+<p align="center">
+  <sub>☝️ Click a deploy button above to launch on <a href="https://brev.nvidia.com">Brev</a> — GPU cloud for AI developers</sub>
+</p>
+
 ### One-Line Bootstrap (Recommended)
 
 ```bash
@@ -173,7 +202,8 @@ Service URLs support dynamic variables resolved at deployment time:
 - `${HOST_IP}` - Public IP from `curl icanhazip.com`
 - `${BASE_DOMAIN}` - Domain suffix extracted from Host header
   - Example: `studio-lccpkmz8f.brevlab.com` → `-lccpkmz8f.brevlab.com`
-  - Usage: `https://dash${BASE_DOMAIN}` → `https://dash-lccpkmz8f.brevlab.com`
+  - Example: `interlude0-uplcf60xo.brevlab.com` → `0-uplcf60xo.brevlab.com`
+  - Usage: `https://novnc${BASE_DOMAIN}` → `https://novnc-lccpkmz8f.brevlab.com` or `https://novnc0-uplcf60xo.brevlab.com`
 
 ### 🎨 Customization
 

@@ -1,7 +1,7 @@
 FROM python:3.11-slim
 
 # OCI labels for GHCR
-LABEL org.opencontainers.image.description="Interlude - Reachy 2 Sim Launcher - Deploy Reachy humanoid robot simulation with Pipecat AI"
+LABEL org.opencontainers.image.description="Interlude - Generic deployment launcher (Reachy 2 Sim configuration)"
 LABEL org.opencontainers.image.licenses="MIT"
 
 # Install Docker CLI, Docker Compose, Helm, kubectl, nginx, and openssl

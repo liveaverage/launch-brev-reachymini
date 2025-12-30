@@ -15,7 +15,7 @@ set -e
 IMAGE="${1:-ghcr.io/liveaverage/launch-brev-reachymini:latest}"
 CONTAINER_NAME="interlude"
 CONFIG_DIR="$(cd "$(dirname "$0")" && pwd)"
-DATA_DIR="$CONFIG_DIR/.r2sim-data"
+DATA_DIR="$CONFIG_DIR/.interlude-data"
 
 # Create data directory for persistent state
 mkdir -p "$DATA_DIR"

@@ -1,7 +1,7 @@
 {
   "_meta": {
     "project_name": "Reachy 2 Sim Launcher",
-    "launcher_path": "/r2sim"
+    "launcher_path": "/interlude"
   },
   "docker-compose": {
     "description": "Reachy 2 Simulation with Pipecat AI",

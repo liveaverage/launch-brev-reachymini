@@ -6,10 +6,10 @@ set -e
 REPO_URL="https://github.com/liveaverage/launch-brev-reachymini.git"
 IMAGE="ghcr.io/liveaverage/launch-brev-reachymini:latest"
 INSTALL_DIR="${INSTALL_DIR:-$HOME/launch-brev-reachymini}"
-CONTAINER_NAME="r2sim-launcher"
+CONTAINER_NAME="interlude"
 
 echo "════════════════════════════════════════════════════════════"
-echo "  Reachy 2 Sim Launcher"
+echo "  Interlude - Reachy 2 Sim Launcher"
 echo "════════════════════════════════════════════════════════════"
 echo ""
 

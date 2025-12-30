@@ -166,7 +166,7 @@ NGINX_PID=$!
 # Banner
 echo ""
 echo "╔════════════════════════════════════════════════════════════════╗"
-echo "║  Reachy 2 Sim Launcher                                         ║"
+echo "║  Interlude - Reachy 2 Sim Launcher                             ║"
 echo "╠════════════════════════════════════════════════════════════════╣"
 if is_deployed; then
 echo "║  Mode: POST-DEPLOYMENT                                         ║"

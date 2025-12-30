@@ -1,6 +1,8 @@
-# Reachy 2 Sim Deployment Launcher
+# Reachy 2 Sim Deployment Launcher (Interlude)
 
 A web-based deployment launcher for the Reachy 2 humanoid robot simulation with Pipecat AI integration. Provides a clean, secure interface for deploying and managing the simulation container with GPU acceleration.
+
+Built on the **Interlude** framework - a generic deployment launcher for containerized applications.
 
 ## Features
 
@@ -80,7 +82,7 @@ Build and run the launcher itself in a container:
 
 ```bash
 # Build the launcher image
-docker build -t r2sim-launcher .
+docker build -t interlude-r2sim .
 
 # Run with Docker socket access
 docker run -d \
@@ -88,8 +90,8 @@ docker run -d \
   -v /var/run/docker.sock:/var/run/docker.sock \
   -v $(pwd)/config.json:/app/config.json:ro \
   -v $(pwd)/docker-compose.yaml:/app/docker-compose.yaml:ro \
-  --name r2sim-launcher \
-  r2sim-launcher
+  --name interlude \
+  interlude-r2sim
 ```
 
 ### Access the Application
@@ -101,7 +103,7 @@ http://localhost:8080
 
 Or if using a custom launcher path (e.g., behind a reverse proxy):
 ```
-http://your-domain.com/r2sim
+http://your-domain.com/interlude
 ```
 
 ## Configuration

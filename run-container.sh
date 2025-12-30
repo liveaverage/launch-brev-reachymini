@@ -13,7 +13,7 @@
 set -e
 
 IMAGE="${1:-ghcr.io/liveaverage/launch-brev-reachymini:latest}"
-CONTAINER_NAME="r2sim-launcher"
+CONTAINER_NAME="interlude"
 CONFIG_DIR="$(cd "$(dirname "$0")" && pwd)"
 DATA_DIR="$CONFIG_DIR/.r2sim-data"
 

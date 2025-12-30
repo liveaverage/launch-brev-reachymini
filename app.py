@@ -299,6 +299,9 @@ def normalize_docker_compose_command(command):
     - Legacy: 'docker-compose' (standalone binary)
     
     Returns: Command string with correct syntax for the current environment
+    
+    Note: Only replaces the command portion (docker-compose or docker compose),
+    preserves filenames like docker-compose.yaml
     """
     # Check if modern 'docker compose' is available
     try:
@@ -308,9 +311,12 @@ def normalize_docker_compose_command(command):
             timeout=5
         )
         if result.returncode == 0:
-            # Modern syntax available, ensure command uses it
+            # Modern syntax available
+            # Only replace at word boundaries to avoid replacing filenames
             logger.info("Detected: docker compose (V2)")
-            return command.replace('docker-compose', 'docker compose')
+            # Replace 'docker-compose' command but not 'docker-compose.yaml' filename
+            import re
+            return re.sub(r'\bdocker-compose\b', 'docker compose', command)
     except Exception:
         pass
     
@@ -322,9 +328,11 @@ def normalize_docker_compose_command(command):
             timeout=5
         )
         if result.returncode == 0:
-            # Legacy syntax available, ensure command uses it
+            # Legacy syntax available
             logger.info("Detected: docker-compose (V1)")
-            return command.replace('docker compose', 'docker-compose')
+            # Replace 'docker compose' command but not filenames
+            import re
+            return re.sub(r'\bdocker\s+compose\b', 'docker-compose', command)
     except Exception:
         pass
     

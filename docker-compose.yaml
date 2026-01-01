@@ -2,6 +2,7 @@ version: '3.8'
 
 services:
   reachy_pipecat:
+    # ghcr.io/liveaverage/reachy-mini-pipecat:fixup-upstreamsync
     image: ghcr.io/liveaverage/reachy-mini-pipecat:latest
     container_name: reachy_pipecat
     restart: unless-stopped
@@ -16,6 +17,10 @@ services:
       - RTC_PORT_RANGE_MAX=10050
       - NVIDIA_API_KEY=${NVIDIA_API_KEY}
       - ELEVENLABS_API_KEY=${ELEVENLABS_API_KEY}
+      # Media backend config:
+      # - 'no_media' (default): For sim or when daemon handles camera/media
+      # - 'default': For physical robot with direct camera/audio access
+      - REACHY_MEDIA_BACKEND=no_media
     deploy:
       resources:
         reservations:

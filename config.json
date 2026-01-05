@@ -34,6 +34,11 @@
         "description": "Interactive robot simulation via noVNC"
       },
       {
+        "name": "Open Reachy Mini Dashboard",
+        "url": "https://dashboard${BASE_DOMAIN}",
+        "description": "Reachy Mini Control & Application UI"
+      },
+      {
         "name": "Open Pipecat Dashboard",
         "url": "https://${HOST_IP}:7860",
         "description": "Pipecat AI control interface"

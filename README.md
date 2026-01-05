@@ -77,8 +77,18 @@ INSTALL_DIR=/opt/reachy-launcher curl -fsSL https://raw.githubusercontent.com/li
 | **GPU** | NVIDIA GPU with drivers 525.60.13+ |
 | **Toolkit** | nvidia-container-toolkit configured |
 | **API Keys** | NVIDIA ([build.nvidia.com](https://build.nvidia.com/)) + ElevenLabs ([elevenlabs.io](https://elevenlabs.io/)) |
+| **Architecture** | `linux/amd64` (x86_64) or `linux/arm64` (Jetson/ARM64+NVIDIA) |
 
 > **Note:** The launcher auto-detects `docker compose` (V2) or `docker-compose` (V1). Both are supported.
+
+### Supported Platforms
+
+| Platform | GPU | Status |
+|:---------|:----|:-------|
+| **x86_64 (AMD64)** with NVIDIA GPU | Tesla, RTX, A100, L4, etc. | ✅ Fully supported |
+| **ARM64 (Jetson)** with NVIDIA GPU | Orin, Xavier, Nano | ✅ Fully supported |
+| **ARM64 (Apple Silicon)** | M1/M2/M3 (no NVIDIA GPU) | ❌ Not supported (requires GPU) |
+| **ARM64 (AWS Graviton)** | CPU-only | ❌ Not supported (requires GPU) |
 
 <details>
 <summary><strong>🔍 Verify GPU Access</strong></summary>

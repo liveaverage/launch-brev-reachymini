@@ -87,7 +87,7 @@ elif [ "$1" == "--docker" ]; then
 
     echo ""
     echo "Deployment app is running!"
-    echo "Access at: http://localhost:8080"
+    echo "Access at: http://localhost:9090"
     echo ""
     echo "View logs: docker logs -f deployment-app"
 
@@ -109,7 +109,7 @@ echo "Setup complete!"
 echo "=================================================="
 echo ""
 echo "Next steps:"
-echo "1. Navigate to http://localhost:8080"
+echo "1. Navigate to http://localhost:9090"
 echo "2. Enter your NGC API key"
 echo "3. Click 'Let it rip' to start NeMo Microservices"
 echo ""

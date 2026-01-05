@@ -24,7 +24,7 @@ else
 fi
 
 echo ""
-echo "Access at: http://localhost:8080"
+echo "Access at: http://localhost:9090"
 echo "Press Ctrl+C to stop"
 echo ""
 echo "Tip: Click the (?) button for help"

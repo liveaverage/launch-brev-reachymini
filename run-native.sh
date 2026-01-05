@@ -13,7 +13,7 @@ echo "  - Direct access to Docker socket"
 echo "  - Direct access to kubectl/helm with your kubeconfig"
 echo "  - No network isolation issues"
 echo ""
-echo "Access at http://localhost:8080"
+echo "Access at http://localhost:9090"
 echo ""
 
 python3 app.py

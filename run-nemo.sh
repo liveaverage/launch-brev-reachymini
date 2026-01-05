@@ -53,7 +53,7 @@ if [ "$1" == "--native" ]; then
     echo "Starting deployment app..."
     echo "Configuration: $CONFIG_FILE"
     echo ""
-    echo "Access the deployment interface at: http://localhost:8080"
+    echo "Access the deployment interface at: http://localhost:9090"
     echo ""
     echo "When prompted, enter your NGC API key from:"
     echo "  https://org.ngc.nvidia.com/setup/api-key"

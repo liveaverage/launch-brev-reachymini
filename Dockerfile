@@ -55,9 +55,9 @@ RUN chmod +x entrypoint.sh 2>/dev/null || true
 ENV CONFIG_FILE=/app/config.json
 
 # Expose ports:
-# 8888 - nginx HTTP (single entry point)
+# 9090 - nginx HTTP (single entry point)
 # Flask runs on internal :8080, not exposed
-EXPOSE 8888
+EXPOSE 9090
 
 # Create data directory for persistent state
 RUN mkdir -p /app/data

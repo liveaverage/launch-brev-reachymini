@@ -13,7 +13,7 @@ docker run -d \
   deployment-app
 
 echo "Deployment app is running with host network mode"
-echo "Access at http://localhost:8080"
+echo "Access at http://localhost:9090"
 echo ""
 echo "This configuration allows:"
 echo "  - Access to local Kubernetes clusters (kind, k3s, minikube, etc.)"

@@ -55,8 +55,8 @@ curl -fsSL https://raw.githubusercontent.com/liveaverage/launch-brev-reachymini/
 **What it does:**
 - ✅ Clones the repository
 - ✅ Pulls container image (`ghcr.io/liveaverage/launch-brev-reachymini:latest`)
-- ✅ Starts the launcher on port 8080
-- ✅ Exposes web UI at `http://localhost:8080`
+- ✅ Starts the launcher on port 9090
+- ✅ Exposes web UI at `http://localhost:9090`
 
 <details>
 <summary><strong>📂 Custom Install Directory</strong></summary>
@@ -112,7 +112,7 @@ If this fails, install [nvidia-container-toolkit](https://docs.nvidia.com/datace
 </tr>
 <tr>
 <td>1️⃣</td>
-<td>Open <code>http://localhost:8080</code> in your browser</td>
+<td>Open <code>http://localhost:9090</code> in your browser</td>
 </tr>
 <tr>
 <td>2️⃣</td>
@@ -388,7 +388,7 @@ pip install -r requirements.txt
 python app.py
 ```
 
-Access at `http://localhost:8080`
+Access at `http://localhost:9090`
 
 </details>
 
@@ -415,13 +415,13 @@ Configure via environment variables:
 
 ```bash
 # Check configuration
-curl http://localhost:8080/config
+curl http://localhost:9090/config
 
 # Check deployment state
-curl http://localhost:8080/state
+curl http://localhost:9090/state
 
 # View help content
-curl http://localhost:8080/help
+curl http://localhost:9090/help
 ```
 
 </details>

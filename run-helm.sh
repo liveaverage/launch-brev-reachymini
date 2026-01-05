@@ -79,7 +79,7 @@ if [ "$choice" == "1" ]; then
     echo ""
     echo "=================================================="
     echo "Access the deployment interface at:"
-    echo "  http://localhost:8080"
+    echo "  http://localhost:9090"
     echo "=================================================="
     echo ""
     echo "When prompted:"
@@ -116,12 +116,12 @@ elif [ "$choice" == "2" ]; then
         echo "Using host network mode (Linux detected)"
         NETWORK_FLAG="--network host"
         PORT_FLAG=""
-        URL="http://localhost:8080"
+        URL="http://localhost:9090"
     else
         echo "Using port mapping (Mac/Windows detected)"
         NETWORK_FLAG=""
         PORT_FLAG="-p 8080:8080"
-        URL="http://localhost:8080"
+        URL="http://localhost:9090"
     fi
 
     echo "Starting container..."

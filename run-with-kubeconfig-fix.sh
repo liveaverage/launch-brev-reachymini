@@ -44,7 +44,7 @@ docker run -d \
 
 echo ""
 echo "Deployment app is running with modified kubeconfig"
-echo "Access at http://localhost:8080"
+echo "Access at http://localhost:9090"
 echo ""
 echo "Kubeconfig has been modified to use Docker-accessible addresses"
 echo "Temporary kubeconfig: $TEMP_KUBECONFIG"

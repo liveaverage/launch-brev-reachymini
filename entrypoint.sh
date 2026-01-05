@@ -1,5 +1,5 @@
 #!/bin/bash
-# Entrypoint: nginx (reverse proxy on :8888) + Flask (SPA on :8080 internal)
+# Entrypoint: nginx (reverse proxy on :9090) + Flask (SPA on :8080 internal)
 # 
 # Routing modes:
 #   PRE-DEPLOYMENT:  / → Flask SPA (enter API keys, deploy)
@@ -8,7 +8,7 @@ set -e
 
 LAUNCHER_PATH="${LAUNCHER_PATH:-/interlude}"
 STATE_FILE="${STATE_FILE:-/app/data/deployment.state}"
-HTTP_PORT="${HTTP_PORT:-8888}"
+HTTP_PORT="${HTTP_PORT:-9090}"
 
 # Stop any existing nginx (from package install)
 pkill nginx 2>/dev/null || true
